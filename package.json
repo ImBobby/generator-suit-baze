@@ -1,0 +1,22 @@
+{
+  "name": "generator-suit-baze",
+  "version": "0.2.0",
+  "description": "Suit-baze is a Front-end starter kit base on HTML5 Boilerplate modified by developers from Suitmedia.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ImBobby/suit-baze"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "ImBobby",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ImBobby/suit-baze/issues"
+  },
+  "homepage": "https://github.com/ImBobby/suit-baze",
+  "dependencies": {
+    "yeoman-generator": "^0.17.5"
+  }
+}

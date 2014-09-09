@@ -1,0 +1,127 @@
+
+/* Ratio variables
+--------------------------------------------------------------------------- */
+
+$MINOR_SECOND   : 1.067;
+$MAJOR_SECOND   : 1.125;
+$MINOR_THIRD    : 1.2;
+$MAJOR_THIRD    : 1.25;
+$PERFECT_FOURTH : 1.333;
+$PERFECT_FIFTH  : 1.5;
+$GOLDEN_SECTION : 1.618;
+$MINOR_SIXTH    : 1.6;
+$MAJOR_SIXTH    : 1.667;
+$MINOR_SEVENTH  : 1.778;
+
+$RATIO          : $PERFECT_FOURTH;
+
+
+/* Functions and Mixins
+--------------------------------------------------------------------------- */
+
+@function getLineHeight($font_size) {
+    $temp: $base_line_height / $font_size * 1em;
+
+    @if $temp < 1em {
+        @return $temp*1.5;
+    } @else {
+        @return $temp;
+    }
+}
+
+@function getMarginBottom($font_size) {
+    $temp: $base_line_height / $font_size * 1em;
+    
+    @return $temp;
+}
+
+@mixin typography_getStyle($multiplier, $direction: 'up') {
+    $font_size: 1em;
+
+    @if $direction == up {
+
+        @if $multiplier == 0 {
+            $font_size: 1em;
+        } @else {
+            @for $i from 1 through $multiplier {
+                $font_size: $font_size * $RATIO;
+            }    
+        }
+
+    } @else {
+        @for $i from 1 through $multiplier {
+            $font_size: (1 / $RATIO) * $font_size;
+        }
+    }
+
+    font-size: $font_size;
+    line-height: getLineHeight($font_size);
+    margin: 0 0 getMarginBottom($font_size) 0;
+
+}
+
+
+/* Styles
+--------------------------------------------------------------------------- */
+
+h1,
+.h1 {
+    @include typography_getStyle(3);
+}
+
+h2,
+.h2 {
+    @include typography_getStyle(2);
+}
+
+h3,
+.h3 {
+    @include typography_getStyle(1);
+}
+
+h4,
+.h4 {
+    @include typography_getStyle(0);
+}
+
+h5,
+.h5 {
+    @include typography_getStyle(1, 'down');
+}
+
+h6,
+.h6 {
+    @include typography_getStyle(2, 'down');
+}
+
+p,
+ul,
+ol,
+hr,
+table {
+    @include typography_getStyle(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
