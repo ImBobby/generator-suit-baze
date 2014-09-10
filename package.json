@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ImBobby/suit-baze"
+    "url": "https://github.com/ImBobby/generator-suit-baze"
   },
   "keywords": [
     "yeoman-generator"
@@ -13,9 +13,9 @@
   "author": "ImBobby",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ImBobby/suit-baze/issues"
+    "url": "https://github.com/ImBobby/generator-suit-baze/issues"
   },
-  "homepage": "https://github.com/ImBobby/suit-baze",
+  "homepage": "https://github.com/ImBobby/generator-suit-baze",
   "dependencies": {
     "yeoman-generator": "^0.17.5"
   }
