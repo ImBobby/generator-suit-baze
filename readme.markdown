@@ -5,10 +5,10 @@
 
 ## Getting Started
 
-1. Make sure you have **[node](http://nodejs.org/download/)** and **[yeoman](http://yeoman.io/)** installed.
+Make sure you have **[node](http://nodejs.org/download/)** and **[yeoman](http://yeoman.io/)** installed.
 
 
-2. Install `generator-suit-baze`: 
+Install generator by running
 ```
 npm install generator-suit-baze -g
 ```
@@ -16,14 +16,9 @@ if it doesn't work, you might need `sudo` command
 
 ## Usage
 
-1. Make a new directory and `cd` into it.
-```
-mkdir my-project && cd $_
-```
 
-2. Run `yo suit-baze`. The generator will automatically install dependencies listed in [`bower.json`](https://github.com/ImBobby/suit-baze/blob/master/bower.json) and [`package.json`](https://github.com/ImBobby/suit-baze/blob/master/package.json).
+to generate Suit-baze boilerplate simply run:
 ```
 yo suit-baze
 ```
-
-3. run `gulp watch` and start coding.
+The generator will also automatically install dependencies listed in [`bower.json`](https://github.com/ImBobby/suit-baze/blob/master/bower.json) and [`package.json`](https://github.com/ImBobby/suit-baze/blob/master/package.json).
