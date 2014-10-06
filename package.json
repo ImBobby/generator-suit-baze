@@ -1,6 +1,6 @@
 {
   "name": "generator-suit-baze",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Suit-baze is a Front-end starter kit base on HTML5 Boilerplate modified by developers from Suitmedia.",
   "main": "index.js",
   "repository": {
