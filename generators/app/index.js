@@ -56,6 +56,8 @@ var SuitBaze = module.exports = yeoman.generators.Base.extend({
             this.src.copy( Path.sass.modules + '_modules.scss'      , Path.sass.modules + '_modules.scss' );
             this.src.copy( Path.sass.modules + '_table.scss'        , Path.sass.modules + '_table.scss' );
             this.src.copy( Path.sass.modules + '_typography.scss'   , Path.sass.modules + '_typography.scss' );
+            this.src.copy( Path.sass.modules + '_pagination.scss'   , Path.sass.modules + '_pagination.scss' );
+            this.src.copy( Path.sass.modules + '_media.scss'        , Path.sass.modules + '_media.scss' );
 
             // partial
             this.src.copy( Path.sass.partial + '_helpers.scss'      , Path.sass.partial + '_helpers.scss' );
