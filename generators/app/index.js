@@ -45,6 +45,7 @@ var SuitBaze = module.exports = yeoman.generators.Base.extend({
             this.src.copy( Path.sass.root + 'main.scss'             , Path.sass.root + 'main.scss' );
 
             // mixins
+            this.src.copy( Path.sass.mixin + '_brandscolor.scss'    , Path.sass.mixin + '_brandscolor.scss' );
             this.src.copy( Path.sass.mixin + '_mixin.scss'          , Path.sass.mixin + '_mixin.scss' );
             this.src.copy( Path.sass.mixin + '_mq.scss'             , Path.sass.mixin + '_mq.scss' );
 
