@@ -1,6 +1,6 @@
 var yeoman          = require('yeoman-generator'),
     file            = require('yeoman-generator').file,
-    updateNotifier  = require('../../update-notifier'),
+    updateNotifier  = require('update-notifier'),
     pkg             = require('../../package.json');
 
 // Path config
