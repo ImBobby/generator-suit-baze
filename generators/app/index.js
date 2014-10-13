@@ -1,5 +1,7 @@
-var yeoman  = require('yeoman-generator'),
-    file    = require('yeoman-generator').file;
+var yeoman          = require('yeoman-generator'),
+    file            = require('yeoman-generator').file,
+    updateNotifier  = require('../../update-notifier'),
+    pkg             = require('../../package.json');
 
 // Path config
 var endPath = '_front-end/';
@@ -26,6 +28,24 @@ var Path = {
 };
 
 var SuitBaze = module.exports = yeoman.generators.Base.extend({
+
+    initializing: {
+
+        checkUpdate: function () {
+            var options = {
+                packageName         : pkg.name,
+                packageVersion      : pkg.version,
+                updateCheckInterval : 1000 * 60 * 60 * 24
+            };
+
+            var notifier = updateNotifier(options);
+
+            if ( notifier.update ) {
+                notifier.notify();
+            }
+        }
+
+    },
 
     default: {
 
