@@ -38,6 +38,18 @@ table {
     width: 100%;
 }
 
+figure {
+    margin: 0 0 $space 0;
+}
+
+label, 
+input, 
+button, 
+select, 
+textarea {
+    font-family: $base_font_family;
+}
+
 .browsehappy {
     background: #FFD17D;
     border-bottom: solid 1px #FFCC6F;
@@ -64,10 +76,6 @@ table {
 // Fix windows phone viewport bug - http://goo.gl/knRaIp
 // ------------------------------------------------------------------------ //
 
-@-webkit-viewport { width: device-width }
-@-moz-viewport { width: device-width }
-@-ms-viewport { width: device-width }
-@-o-viewport { width: device-width }
 @viewport { width: device-width }
 
 
@@ -77,4 +85,3 @@ table {
 input[type="search"] {
     box-sizing: border-box;
 }
-

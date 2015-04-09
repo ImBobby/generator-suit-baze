@@ -1,4 +1,4 @@
-/*! [PROJECT_NAME] | January 2015 | Suitmedia */
+/*! [PROJECT_NAME] | Suitmedia */
 
 ;(function ( window, document, undefined ) {
 
@@ -19,6 +19,8 @@
             Site.fastClick();
             Site.enableActiveStateMobile();
             Site.WPViewportFix();
+
+            window.Site = Site;
         },
 
         fastClick: function () {
@@ -48,16 +50,12 @@
 
     };
 
-    var siteInit = function () {
-        Site.init();
-    };
-
     var checkJquery = function () {
         Modernizr.load([
             {
                 test    : window.jQuery,
                 nope    : assets._jquery_local,
-                complete: siteInit
+                complete: Site.init
             }
         ]);
     };
@@ -66,7 +64,5 @@
         load    : assets._jquery_cdn,
         complete: checkJquery
     });
-
-    window.Site = Site;
 
 })( window, document );
