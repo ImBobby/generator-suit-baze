@@ -23,7 +23,10 @@ var Path = {
     img: {
         root    : 'dev/img/',
         webp    : 'dev/img/webp/'
-    }
+    },
+
+    font: 'dev/fonts',
+    css: 'dev/css'
 
 };
 
@@ -59,6 +62,10 @@ var SuitBaze = module.exports = yeoman.generators.Base.extend({
             this.src.copy('gulpfile.js' , 'gulpfile.js');
             this.src.copy('package.json', 'package.json');
             this.src.copy('bower.json'  , 'bower.json');
+
+            // ---------- Create folders ---------- //
+            this.mkdir( Path.font );
+            this.mkdir( Path.css );
 
             // ---------- Copy SCSS Files ---------- //
             // main
