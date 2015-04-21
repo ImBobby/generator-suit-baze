@@ -5,6 +5,7 @@
 var gulp    = require('gulp'),
     gutil   = require('gulp-util'),
     del     = require('del'),
+    path    = require('path'),
 
     // load all plugins with prefix 'gulp'
     plugins = require('gulp-load-plugins')();
@@ -25,9 +26,11 @@ var autoprefixOpts = {
 --------------------------------------------------------------------------------- */
 
 gulp.task('html_watch', function () {
+    var srcToWatch = '*.html';
+
     return gulp
-        .src('*.html')
-        .pipe(plugins.watch())
+        .src( srcToWatch )
+        .pipe(plugins.watch( srcToWatch ))
         .pipe(plugins.livereload());
 });
 
@@ -37,9 +40,11 @@ gulp.task('html_watch', function () {
 --------------------------------------------------------------------------------- */
 
 gulp.task('css_watch', function () {
+    var srcToWatch = paths.build + 'css/*.css';
+
     return gulp
-        .src(paths.build + 'css/*.css')
-        .pipe(plugins.watch())
+        .src( srcToWatch )
+        .pipe(plugins.watch( srcToWatch ))
         .pipe(plugins.livereload());
 });
 
@@ -49,9 +54,11 @@ gulp.task('css_watch', function () {
 --------------------------------------------------------------------------------- */
 
 gulp.task('js_watch', function () {
+    var srcToWatch = paths.build + 'js/*.js';
+
     return gulp
-        .src(paths.build + 'js/*.js')
-        .pipe(plugins.watch())
+        .src( srcToWatch )
+        .pipe(plugins.watch( srcToWatch ))
         .pipe(plugins.livereload());
 });
 
@@ -62,15 +69,21 @@ gulp.task('js_watch', function () {
 
 gulp.task('sass', function () {
     var options = {
-        style: 'expanded'
+        style: 'expanded',
+        onError: function ( err ) {
+            var errMsg  = gutil.colors.red( 'ERROR: ', err.message );
+            var errFile = gutil.colors.green(path.basename(err.file) + ':' + err.line);
+
+            console.log();
+            console.log(errMsg + ' - ' + errFile);
+            console.log();
+            gutil.beep();
+        }
     };
 
     return gulp
         .src(paths.dev + 'sass/main.scss')
-        .pipe(plugins.rubySass(options)
-            .on('error', gutil.log)
-            .on('error', gutil.beep)
-        )
+        .pipe(plugins.sass(options))
         .pipe(gulp.dest(paths.build + 'css'));
 });
 
@@ -99,7 +112,7 @@ gulp.task('style', function () {
 
     return gulp
         .src(paths.dev + 'sass/main.scss')
-        .pipe(plugins.rubySass(options))
+        .pipe(plugins.sass(options))
         .pipe(gulp.dest(paths.build + 'css'));
 });
 
