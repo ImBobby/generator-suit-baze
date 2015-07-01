@@ -1,3 +1,14 @@
+
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
 html,
 button,
 input,
@@ -48,6 +59,10 @@ button,
 select, 
 textarea {
     font-family: $base_font_family;
+}
+
+canvas {
+    vertical-align: middle;
 }
 
 .browsehappy {
