@@ -69,7 +69,7 @@ gulp.task('js_watch', function () {
 
 gulp.task('sass', function () {
     var options = {
-        style: 'expanded',
+        outputStyle: 'expanded',
         onError: function ( err ) {
             var errMsg  = gutil.colors.red( 'ERROR: ', err.message );
             var errFile = gutil.colors.green(path.basename(err.file) + ':' + err.line);
@@ -83,20 +83,7 @@ gulp.task('sass', function () {
 
     return gulp
         .src(paths.dev + 'sass/main.scss')
-        .pipe(plugins.sass(options))
-        .pipe(gulp.dest(paths.build + 'css'));
-});
-
-
-
-/* Task: Autoprefix
---------------------------------------------------------------------------------- */
-
-gulp.task('autoprefix', function () {
-
-    return gulp
-        .src(paths.build + 'css/main.css')
-        .pipe(plugins.changed(paths.build + 'css'))
+        .pipe(plugins.sass(options).on('error', plugins.sass.logError))
         .pipe(plugins.autoprefixer(autoprefixOpts))
         .pipe(gulp.dest(paths.build + 'css'));
 });
@@ -108,12 +95,13 @@ gulp.task('autoprefix', function () {
 
 gulp.task('style', function () {
     var options = {
-        style: 'compressed'
+        outputStyle: 'compressed'
     };
 
     return gulp
         .src(paths.dev + 'sass/main.scss')
         .pipe(plugins.sass(options))
+        .pipe(plugins.autoprefixer(autoprefixOpts))
         .pipe(gulp.dest(paths.build + 'css'));
 });
 
@@ -241,9 +229,7 @@ gulp.task('clean', function () {
 /* Task: Default
 --------------------------------------------------------------------------------- */
 
-gulp.task('default', ['imagemin', 'sass', 'copy-JS', 'fonts', 'copyCSS', 'webp'], function () {
-    gulp.start('autoprefix');
-});
+gulp.task('default', ['imagemin', 'sass', 'copy-JS', 'fonts', 'copyCSS', 'webp']);
 
 
 
@@ -254,9 +240,6 @@ gulp.task('default', ['imagemin', 'sass', 'copy-JS', 'fonts', 'copyCSS', 'webp']
 gulp.task('watch', ['default'], function () {
     // SASS 
     gulp.watch(paths.dev + 'sass/**/*.scss', ['sass']);
-
-    // Autoprefix 
-    gulp.watch(paths.build + 'css/main.css', ['autoprefix']);
 
     // Uglify
     gulp.watch(paths.dev + 'js/**/*.js', ['copy-JS']);
@@ -290,9 +273,7 @@ gulp.task('livereload', function () {
 /* Task: Build
 --------------------------------------------------------------------------------- */
 
-gulp.task('production', ['style', 'uglify', 'imagemin', 'webp', 'fonts', 'copyCSS'], function () {
-    gulp.start('autoprefix');
-});
+gulp.task('production', ['style', 'uglify', 'imagemin', 'webp', 'fonts', 'copyCSS']);
 
 gulp.task('build', ['clean'], function () {
     gulp.start('production');
