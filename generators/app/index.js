@@ -1,9 +1,16 @@
 var generators      = require('yeoman-generator'),
     updateNotifier  = require('update-notifier'),
     pkg             = require('../../package.json'),
-    jsonFile        = require('json-file'),
     jsonPretty      = require('json-pretty'),
     fs              = require('fs');
+
+var choices = [
+    'boilerplate',
+    'slick-carousel',
+    'font-awesome',
+    'fitvids',
+    'exit'
+];
 
 module.exports = generators.Base.extend({
     initializing: {
@@ -19,7 +26,7 @@ module.exports = generators.Base.extend({
             type: 'list',
             name: 'options',
             message: 'What can I do for you?',
-            choices: ['boilerplate', 'slick-carousel', 'font-awesome', 'exit']
+            choices: choices
         }, function (answers) {
             this.answers = answers.options;
             done();
@@ -27,67 +34,84 @@ module.exports = generators.Base.extend({
     },
 
     write: function () {
-        var _this = this;
-
         var options = {
             boilerplate: boilerplate,
             slickcarousel: slickCarousel,
             fontawesome: fontAwesome,
+            fitvids: fitvids,
             exit: function () {}
         };
 
         function boilerplate() {
-            _this.fs.copy(
-                _this.templatePath('boilerplate/**/*'),
-                _this.destinationPath('./')
+            this.fs.copy(
+                this.templatePath('boilerplate/**/*'),
+                this.destinationPath('./')
             );
 
-            _this.fs.copy(
-                _this.templatePath('_gitignore'),
-                _this.destinationPath('./.gitignore')
+            this.fs.copy(
+                this.templatePath('_gitignore'),
+                this.destinationPath('./.gitignore')
             );
         }
 
         function slickCarousel() {
-            _this.fs.copy(
-                _this.templatePath('slick-carousel/slick.js'),
-                _this.destinationPath('./dev/js/vendor/slick.js')
+            this.fs.copy(
+                this.templatePath('slick-carousel/slick.js'),
+                this.destinationPath('./dev/js/vendor/slick.js')
             );
 
-            _this.fs.copy(
-                _this.templatePath('slick-carousel/_slick.scss'),
-                _this.destinationPath('./dev/sass/plugin/_slick.scss')
+            this.fs.copy(
+                this.templatePath('slick-carousel/_slick.scss'),
+                this.destinationPath('./dev/sass/plugin/_slick.scss')
             );
 
-            var bowerJson = jsonFile.read(_this.destinationPath('./bower.json'));
-
-            bowerJson.set('dependencies.slick-carousel', '~1.5.8');
-            bowerJson.writeSync();
-
-            beautifyBowerJson();
+            updateBower.bind(this)('slick-carousel', '~1.5.8');
         }
 
         function fontAwesome() {
-            _this.fs.copy(
-                _this.templatePath('font-awesome/fonts/*'),
-                _this.destinationPath('./dev/fonts/')
+            this.fs.copy(
+                this.templatePath('font-awesome/fonts/*'),
+                this.destinationPath('./dev/fonts/')
             );
 
-            _this.fs.copy(
-                _this.templatePath('font-awesome/_font-awesome.scss'),
-                _this.destinationPath('./dev/sass/plugin/_font-awesome.scss')
+            this.fs.copy(
+                this.templatePath('font-awesome/_font-awesome.scss'),
+                this.destinationPath('./dev/sass/plugin/_font-awesome.scss')
             );
 
-            var bowerJson = jsonFile.read(_this.destinationPath('./bower.json'));
+            updateBower.bind(this)('font-awesome', 'fontawesome#~4.4.0');
+        }
 
-            bowerJson.set('dependencies.font-awesome', 'fontawesome#~4.4.0');
-            bowerJson.writeSync();
+        function fitvids() {
+            this.fs.copy(
+                this.templatePath('fitvids/*'),
+                this.destinationPath('./dev/js/vendor/')
+            );
 
-            beautifyBowerJson();
+            updateBower.bind(this)('jquery.fitvids', 'fitvids#~1.1.0');
+        }
+
+        function updateBower(name, version) {
+            var _this = this;
+            var bowerJson = this.destinationPath('./bower.json');
+
+            fs.readFile(bowerJson, function (err, data) {
+                if (err) throw err;
+
+                var json = JSON.parse(data);
+
+                json.dependencies[name] = version;
+
+                fs.writeFile(bowerJson, JSON.stringify(json), function (err) {
+                    if (err) throw err;
+
+                    beautifyBowerJson.bind(_this)();
+                });
+            });
         }
 
         function beautifyBowerJson() {
-            var file = _this.destinationPath('./bower.json');
+            var file = this.destinationPath('./bower.json');
 
             fs.readFile(file, function (err, data) {
                 if ( err ) throw err;
@@ -98,8 +122,8 @@ module.exports = generators.Base.extend({
             });
         }
 
-        var func = options[_this.answers.replace('-', '')];
+        var func = options[this.answers.replace('-', '')];
 
-        func();
+        func.bind(this)();
     }
 });
