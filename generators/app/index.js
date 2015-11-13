@@ -2,6 +2,7 @@ var generators      = require('yeoman-generator'),
     updateNotifier  = require('update-notifier'),
     pkg             = require('../../package.json'),
     jsonFile        = require('json-file'),
+    jsonPretty      = require('json-pretty'),
     fileSystem      = require('fs');
 
 module.exports = generators.Base.extend({
@@ -18,7 +19,7 @@ module.exports = generators.Base.extend({
             type: 'list',
             name: 'options',
             message: 'What can I do for you?',
-            choices: ['suit-baze', 'slick-carousel', 'font-awesome', 'exit']
+            choices: ['boilerplate', 'slick-carousel', 'font-awesome', 'exit']
         }, function (answers) {
             this.answers = answers.options;
             done();
@@ -29,13 +30,13 @@ module.exports = generators.Base.extend({
         var _this = this;
 
         var options = {
-            suitbaze: suitBaze,
+            boilerplate: boilerplate,
             slickcarousel: slickCarousel,
             fontawesome: fontAwesome,
             exit: function () {}
         };
 
-        function suitBaze() {
+        function boilerplate() {
             _this.fs.copy(
                 _this.templatePath('boilerplate/**/*'),
                 _this.destinationPath('./')
@@ -62,6 +63,8 @@ module.exports = generators.Base.extend({
 
             bowerJson.set('dependencies.slick-carousel', '~1.5.8');
             bowerJson.writeSync();
+
+            beautifyBowerJson();
         }
 
         function fontAwesome() {
@@ -79,6 +82,18 @@ module.exports = generators.Base.extend({
 
             bowerJson.set('dependencies.font-awesome', 'fontawesome#~4.4.0');
             bowerJson.writeSync();
+
+            beautifyBowerJson();
+        }
+
+        function beautifyBowerJson() {
+            fileSystem.readFile(_this.destinationPath('./bower.json'), function (err, data) {
+                if ( err ) throw err;
+
+                fileSystem.writeFile(_this.destinationPath('./bower.json'), jsonPretty(JSON.parse(data)), function (error) {
+                    if ( error ) throw error;
+                });
+            });
         }
 
         var func = options[_this.answers.replace('-', '')];

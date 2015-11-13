@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ImBobby/generator-suit-baze",
   "dependencies": {
     "json-file": "^0.1.0",
+    "json-pretty": "0.0.1",
     "update-notifier": "^0.5.0",
     "yeoman-generator": "^0.21.1"
   }
