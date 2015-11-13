@@ -3,7 +3,7 @@ var generators      = require('yeoman-generator'),
     pkg             = require('../../package.json'),
     jsonFile        = require('json-file'),
     jsonPretty      = require('json-pretty'),
-    fileSystem      = require('fs');
+    fs              = require('fs');
 
 module.exports = generators.Base.extend({
     initializing: {
@@ -87,10 +87,12 @@ module.exports = generators.Base.extend({
         }
 
         function beautifyBowerJson() {
-            fileSystem.readFile(_this.destinationPath('./bower.json'), function (err, data) {
+            var file = _this.destinationPath('./bower.json');
+
+            fs.readFile(file, function (err, data) {
                 if ( err ) throw err;
 
-                fileSystem.writeFile(_this.destinationPath('./bower.json'), jsonPretty(JSON.parse(data)), function (error) {
+                fs.writeFile(file, jsonPretty(JSON.parse(data)), function (error) {
                     if ( error ) throw error;
                 });
             });
