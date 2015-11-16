@@ -4,18 +4,26 @@ var generators      = require('yeoman-generator'),
     jsonPretty      = require('json-pretty'),
     fs              = require('fs');
 
-var choices = [
-    'boilerplate',
-    'slick-carousel',
-    'font-awesome',
-    'fitvids',
-    'exit'
-];
-
 module.exports = generators.Base.extend({
     initializing: {
         checkUpdate: function () {
             updateNotifier({pkg: pkg}).notify();
+        },
+
+        getDirectoryList: function () {
+            this.choices = [];
+
+            var list = fs.readdirSync(this.templatePath('./'));
+
+            list.forEach( function (value, index) {
+                var path = fs.lstatSync(this.templatePath('./' + value));
+
+                if ( path.isDirectory() ) {
+                    this.choices.push(value);
+                }
+            }.bind(this));
+
+            this.choices.push('exit');
         }
     },
 
@@ -26,7 +34,7 @@ module.exports = generators.Base.extend({
             type: 'list',
             name: 'options',
             message: 'What can I do for you?',
-            choices: choices
+            choices: this.choices
         }, function (answers) {
             this.answers = answers.options;
             done();
@@ -44,7 +52,7 @@ module.exports = generators.Base.extend({
 
         function boilerplate() {
             this.fs.copy(
-                this.templatePath('boilerplate/**/*'),
+                this.templatePath(this.answers + '/**/*'),
                 this.destinationPath('./')
             );
 
@@ -56,12 +64,12 @@ module.exports = generators.Base.extend({
 
         function slickCarousel() {
             this.fs.copy(
-                this.templatePath('slick-carousel/slick.js'),
+                this.templatePath(this.answers + '/slick.js'),
                 this.destinationPath('./dev/js/vendor/slick.js')
             );
 
             this.fs.copy(
-                this.templatePath('slick-carousel/_slick.scss'),
+                this.templatePath(this.answers + '/_slick.scss'),
                 this.destinationPath('./dev/sass/plugin/_slick.scss')
             );
 
@@ -70,12 +78,12 @@ module.exports = generators.Base.extend({
 
         function fontAwesome() {
             this.fs.copy(
-                this.templatePath('font-awesome/fonts/*'),
+                this.templatePath(this.answers + '/fonts/*'),
                 this.destinationPath('./dev/fonts/')
             );
 
             this.fs.copy(
-                this.templatePath('font-awesome/_font-awesome.scss'),
+                this.templatePath(this.answers + '/_font-awesome.scss'),
                 this.destinationPath('./dev/sass/plugin/_font-awesome.scss')
             );
 
@@ -84,7 +92,7 @@ module.exports = generators.Base.extend({
 
         function fitvids() {
             this.fs.copy(
-                this.templatePath('fitvids/*'),
+                this.templatePath(this.answers + '/*'),
                 this.destinationPath('./dev/js/vendor/')
             );
 
