@@ -51,7 +51,7 @@ module.exports = generators.Base.extend({
 
         } else {
             var path = this.templatePath('./' + answer);
-
+            var registry = require(path + '/registry.json');
             var files = fs.readdirSync(path);
 
             files.forEach( function (value, index) {
@@ -63,6 +63,8 @@ module.exports = generators.Base.extend({
                     copyAssets.bind(this)(value, './dev/fonts/');
                 }
             }.bind(this));
+
+            updateBower.bind(this)(registry.name, registry.version);
         }
 
         function boilerplate() {
@@ -82,6 +84,39 @@ module.exports = generators.Base.extend({
                 this.templatePath(answer + '/' + file),
                 this.destinationPath(destination + file)
             );
+        }
+
+        function updateBower(name, version) {
+            var _this = this;
+            var bowerJson = this.destinationPath('./bower.json');
+
+            fs.readFile(bowerJson, function (err, data) {
+                if (err) throw err;
+
+                var json = JSON.parse(data);
+
+                json.dependencies[name] = version;
+
+                fs.writeFile(bowerJson, JSON.stringify(json), function (err) {
+                    if (err) throw err;
+
+                    beautifyBowerJson.bind(_this)();
+                });
+            });
+        }
+
+        function beautifyBowerJson() {
+            var file = this.destinationPath('./bower.json');
+
+            fs.readFile(file, function (err, data) {
+                if ( err ) throw err;
+
+                var output = jsonPretty(JSON.parse(data));
+
+                fs.writeFile(file, output, function (error) {
+                    if ( error ) throw error;
+                });
+            });
         }
     }
 });
