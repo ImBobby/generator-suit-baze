@@ -2,7 +2,8 @@ var generators      = require('yeoman-generator'),
     updateNotifier  = require('update-notifier'),
     pkg             = require('../../package.json'),
     jsonPretty      = require('json-pretty'),
-    fs              = require('fs');
+    fs              = require('fs'),
+    helper          = require('./helper.js');
 
 module.exports = generators.Base.extend({
     initializing: {
@@ -42,17 +43,31 @@ module.exports = generators.Base.extend({
     },
 
     write: function () {
-        var options = {
-            boilerplate: boilerplate,
-            slickcarousel: slickCarousel,
-            fontawesome: fontAwesome,
-            fitvids: fitvids,
-            exit: function () {}
-        };
+        var answer = this.answers;
+
+        if (answer === 'boilerplate') {
+            boilerplate.bind(this)();
+        } else if (answer === 'exit') {
+
+        } else {
+            var path = this.templatePath('./' + answer);
+
+            var files = fs.readdirSync(path);
+
+            files.forEach( function (value, index) {
+                if ( helper.isJs(value) ) {
+                    copyAssets.bind(this)(value, './dev/js/vendor/');
+                } else if ( helper.isScss(value) ) {
+                    copyAssets.bind(this)(value, './dev/sass/plugin/');
+                } else if ( helper.isFont(value) ) {
+                    copyAssets.bind(this)(value, './dev/fonts/');
+                }
+            }.bind(this));
+        }
 
         function boilerplate() {
             this.fs.copy(
-                this.templatePath(this.answers + '/**/*'),
+                this.templatePath(answer + '/**/*'),
                 this.destinationPath('./')
             );
 
@@ -62,76 +77,11 @@ module.exports = generators.Base.extend({
             );
         }
 
-        function slickCarousel() {
+        function copyAssets(file, destination) {
             this.fs.copy(
-                this.templatePath(this.answers + '/slick.js'),
-                this.destinationPath('./dev/js/vendor/slick.js')
+                this.templatePath(answer + '/' + file),
+                this.destinationPath(destination + file)
             );
-
-            this.fs.copy(
-                this.templatePath(this.answers + '/_slick.scss'),
-                this.destinationPath('./dev/sass/plugin/_slick.scss')
-            );
-
-            updateBower.bind(this)('slick-carousel', '~1.5.8');
         }
-
-        function fontAwesome() {
-            this.fs.copy(
-                this.templatePath(this.answers + '/fonts/*'),
-                this.destinationPath('./dev/fonts/')
-            );
-
-            this.fs.copy(
-                this.templatePath(this.answers + '/_font-awesome.scss'),
-                this.destinationPath('./dev/sass/plugin/_font-awesome.scss')
-            );
-
-            updateBower.bind(this)('font-awesome', 'fontawesome#~4.4.0');
-        }
-
-        function fitvids() {
-            this.fs.copy(
-                this.templatePath(this.answers + '/*'),
-                this.destinationPath('./dev/js/vendor/')
-            );
-
-            updateBower.bind(this)('jquery.fitvids', 'fitvids#~1.1.0');
-        }
-
-        function updateBower(name, version) {
-            var _this = this;
-            var bowerJson = this.destinationPath('./bower.json');
-
-            fs.readFile(bowerJson, function (err, data) {
-                if (err) throw err;
-
-                var json = JSON.parse(data);
-
-                json.dependencies[name] = version;
-
-                fs.writeFile(bowerJson, JSON.stringify(json), function (err) {
-                    if (err) throw err;
-
-                    beautifyBowerJson.bind(_this)();
-                });
-            });
-        }
-
-        function beautifyBowerJson() {
-            var file = this.destinationPath('./bower.json');
-
-            fs.readFile(file, function (err, data) {
-                if ( err ) throw err;
-
-                fs.writeFile(file, jsonPretty(JSON.parse(data)), function (error) {
-                    if ( error ) throw error;
-                });
-            });
-        }
-
-        var func = options[this.answers.replace('-', '')];
-
-        func.bind(this)();
     }
 });
