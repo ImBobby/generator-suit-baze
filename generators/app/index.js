@@ -5,6 +5,12 @@ var generators      = require('yeoman-generator'),
     fs              = require('fs'),
     helper          = require('./helper.js');
 
+var paths = {
+    js: './dev/js/vendor/',
+    scss: './dev/sass/plugin/',
+    font: './dev/fonts/'
+};
+
 module.exports = generators.Base.extend({
     initializing: {
         checkUpdate: function () {
@@ -44,23 +50,39 @@ module.exports = generators.Base.extend({
 
     write: function () {
         var answer = this.answers;
+        var bowerJson = this.destinationPath('./bower.json');
+
+        if ( answer === 'exit' ) {
+            process.exit(1);
+        }
 
         if ( answer === 'boilerplate' ) {
-            boilerplate.bind(this)();
-        } else if ( answer === 'exit' ) {
-
+            try {
+                fs.openSync(bowerJson, 'r');
+                console.log('Boilerplate may have been installed.');
+                process.exit(1);
+            } catch (e) {
+                boilerplate.bind(this)();
+            }
         } else {
+            try {
+                fs.openSync(bowerJson, 'r');
+            } catch(e) {
+                console.log('bower.json is not exist. Install boilerplate first.');
+                process.exit(1);
+            }
+
             var path = this.templatePath('./' + answer);
             var registry = require(path + '/registry.json');
             var files = fs.readdirSync(path);
 
             files.forEach( function (value, index) {
                 if ( helper.isJs(value) ) {
-                    copyAssets.bind(this)(value, './dev/js/vendor/');
+                    copyAssets.bind(this)(value, paths.js);
                 } else if ( helper.isScss(value) ) {
-                    copyAssets.bind(this)(value, './dev/sass/plugin/');
+                    copyAssets.bind(this)(value, paths.scss);
                 } else if ( helper.isFont(value) ) {
-                    copyAssets.bind(this)(value, './dev/fonts/');
+                    copyAssets.bind(this)(value, paths.font);
                 }
             }.bind(this));
 
