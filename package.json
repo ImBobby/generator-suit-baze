@@ -1,7 +1,7 @@
 {
   "name": "generator-suit-baze",
-  "version": "1.3.0",
-  "description": "Suit-baze is a Front-end starter kit base on HTML5 Boilerplate modified by developers from Suitmedia.",
+  "version": "2.0.0",
+  "description": "a Yeoman generator to generate boilerplate with built-in most-used plugins",
   "main": "index.js",
   "repository": {
     "type": "git",
