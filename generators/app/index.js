@@ -3,7 +3,8 @@ var generators      = require('yeoman-generator'),
     pkg             = require('../../package.json'),
     jsonPretty      = require('json-pretty'),
     fs              = require('fs'),
-    helper          = require('./helper.js');
+    helper          = require('./helper.js'),
+    inquirer        = require('inquirer');
 
 var paths = {
     js: './dev/js/vendor/',
@@ -30,7 +31,9 @@ module.exports = generators.Base.extend({
                 }
             }.bind(this));
 
+            this.choices.push(new inquirer.Separator());
             this.choices.push('exit');
+            this.choices.push(new inquirer.Separator());
         }
     },
 
