@@ -45,9 +45,9 @@ module.exports = generators.Base.extend({
     write: function () {
         var answer = this.answers;
 
-        if (answer === 'boilerplate') {
+        if ( answer === 'boilerplate' ) {
             boilerplate.bind(this)();
-        } else if (answer === 'exit') {
+        } else if ( answer === 'exit' ) {
 
         } else {
             var path = this.templatePath('./' + answer);
@@ -91,29 +91,27 @@ module.exports = generators.Base.extend({
             var bowerJson = this.destinationPath('./bower.json');
 
             fs.readFile(bowerJson, function (err, data) {
-                if (err) throw err;
+                if ( err ) throw err;
 
                 var json = JSON.parse(data);
 
                 json.dependencies[name] = version;
 
                 fs.writeFile(bowerJson, JSON.stringify(json), function (err) {
-                    if (err) throw err;
+                    if ( err ) throw err;
 
-                    beautifyBowerJson.bind(_this)();
+                    beautifyBowerJson(bowerJson);
                 });
             });
         }
 
-        function beautifyBowerJson() {
-            var file = this.destinationPath('./bower.json');
-
-            fs.readFile(file, function (err, data) {
+        function beautifyBowerJson(bowerJson) {
+            fs.readFile(bowerJson, function (err, data) {
                 if ( err ) throw err;
 
                 var output = jsonPretty(JSON.parse(data));
 
-                fs.writeFile(file, output, function (error) {
+                fs.writeFile(bowerJson, output, function (error) {
                     if ( error ) throw error;
                 });
             });
