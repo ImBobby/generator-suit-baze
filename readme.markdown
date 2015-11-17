@@ -1,7 +1,7 @@
 # [Suit-baze](https://github.com/ImBobby/suit-baze) generator
 
 
-> a Yeoman generator to set up project easy and fast using Suit-baze
+> a Yeoman generator to generate boilerplate with built-in most-used plugins
 
 ## Getting Started
 
@@ -16,9 +16,9 @@ if it doesn't work, you might need `sudo` command
 
 ## Usage
 
-
-to generate Suit-baze boilerplate simply run:
+Running
 ```
 yo suit-baze
 ```
-The generator will also automatically install dependencies listed in [`bower.json`](https://github.com/ImBobby/suit-baze/blob/master/bower.json) and [`package.json`](https://github.com/ImBobby/suit-baze/blob/master/package.json).
+will give you options what do you want to install
+![](http://oi66.tinypic.com/2r3ecfs.jpg)
