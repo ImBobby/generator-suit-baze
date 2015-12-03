@@ -132,6 +132,25 @@
                 "https://cdnjs.cloudflare.com/ajax/libs/headroom/0.7.0/headroom.js"
             ],
             "url": "github.com/WickyNilliams/headroom.js"
+        },
+        {
+            "name": "autosize",
+            "registryName": "autosize",
+            "version": "~3.0.14",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.14/autosize.js"
+            ],
+            "url": "github.com/jackmoore/autosize"
+        },
+        {
+            "name": "moment",
+            "registryName": "moment",
+            "version": "~2.10.6",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/id.js"
+            ],
+            "url": "github.com/moment/moment"
         }
     ]
 }
