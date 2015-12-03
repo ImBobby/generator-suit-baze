@@ -1,0 +1,137 @@
+{
+    "data": [
+        {
+            "name": "slick-carousel",
+            "registryName": "slick-carousel",
+            "version": "~1.5.8",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.8/slick.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.8/slick.css"
+            ],
+            "url": "github.com/kenwheeler/slick/"
+        },
+        {
+            "name": "jquery-unveil",
+            "registryName": "jquery-unveil",
+            "version": "unveil#~1.3.0",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/unveil/1.3.0/jquery.unveil.js"
+            ],
+            "url": "github.com/luis-almeida/unveil"
+        },
+        {
+            "name": "jquery-throttle-debounce",
+            "registryName": "jquery-throttle-debounce",
+            "version": "*",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.js"
+            ],
+            "url": "github.com/cowboy/jquery-throttle-debounce"
+        },
+        {
+            "name": "handlebars",
+            "registryName": "handlebars",
+            "version": "~4.0.4",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.4/handlebars.js"
+            ],
+            "url": "github.com/wycats/handlebars.js"
+        },
+        {
+            "name": "baze-validate",
+            "registryName": "baze-validation",
+            "version": "~1.0.2",
+            "assets": [
+                "https://raw.githubusercontent.com/ImBobby/Baze-Validation/master/baze.validate.js"
+            ],
+            "url": "github.com/ImBobby/Baze-Validation"
+        },
+        {
+            "name": "sprintf",
+            "registryName": "sprintf",
+            "version": "~1.0.3",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.0.3/sprintf.js"
+            ],
+            "url": "github.com/alexei/sprintf.js"
+        },
+        {
+            "name": "fitvids",
+            "registryName": "jquery.fitvids",
+            "version": "fitvids#~1.1.0",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.js"
+            ],
+            "url": "github.com/davatron5000/FitVids.js"
+        },
+        {
+            "name": "masonry",
+            "registryName": "masonry",
+            "version": "~3.3.2",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.js"
+            ],
+            "url": "github.com/desandro/masonry"
+        },
+        {
+            "name": "images-loaded",
+            "registryName": "imagesloaded",
+            "version": "~3.2.0",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.2.0/imagesloaded.pkgd.js"
+            ],
+            "url": "github.com/desandro/imagesloaded"
+        },
+        {
+            "name": "perfect-scrollbar",
+            "registryName": "perfect-scrollbar",
+            "version": "~0.6.7",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.7/js/perfect-scrollbar.jquery.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.7/css/perfect-scrollbar.css"
+            ],
+            "url": "github.com/noraesae/perfect-scrollbar"
+        },
+        {
+            "name": "vanilla-masker",
+            "registryName": "vanilla-masker",
+            "version": "~1.0.9",
+            "assets": [
+                "https://cdn.jsdelivr.net/vanilla-masker/1.0.9/vanilla-masker.js"
+            ],
+            "url": "github.com/BankFacil/vanilla-masker"
+        },
+        {
+            "name": "font-awesome",
+            "registryName": "font-awesome",
+            "version": "fontawesome#~4.5.0",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css",
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/FontAwesome.otf",
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.eot",
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf",
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.woff",
+                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.woff2"
+            ],
+            "url": "github.com/FortAwesome/Font-Awesome/"
+        },
+        {
+            "name": "lodash",
+            "registryName": "lodash",
+            "version": "~3.10.1",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"
+            ],
+            "url": "github.com/lodash/lodash/"
+        },
+        {
+            "name": "headroom",
+            "registryName": "headroom.js",
+            "version": "~0.7.0",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/headroom/0.7.0/headroom.js"
+            ],
+            "url": "github.com/WickyNilliams/headroom.js"
+        }
+    ]
+}

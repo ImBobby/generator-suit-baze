@@ -1,15 +1,30 @@
-var generators      = require('yeoman-generator'),
-    updateNotifier  = require('update-notifier'),
-    pkg             = require('../../package.json'),
-    jsonPretty      = require('json-pretty'),
-    fs              = require('fs'),
-    helper          = require('./helper.js'),
-    inquirer        = require('inquirer');
+var generators      = require('yeoman-generator');
+var updateNotifier  = require('update-notifier');
+var pkg             = require('../../package.json');
+var jsonPretty      = require('json-pretty');
+var fs              = require('fs');
+var helper          = require('./helper.js');
+var inquirer        = require('inquirer');
+var chalk           = require('chalk');
+var clear           = require('clear');
+var plugins         = require('./assets.json').data;
+var _               = require('lodash');
+var download        = require('download');
+var fileName        = require('file-name');
 
 var paths = {
     js: './dev/js/vendor/',
     scss: './dev/sass/plugin/',
     font: './dev/fonts/'
+};
+
+var separator = ' —';
+
+var msgs = {
+    boilerplate: 'Boilerplate may have been installed.',
+    bower: 'bower.json is not exist. Install boilerplate first.',
+    downloading: 'Downloading asset(s) from cdn...',
+    created: 'asset will be created in '
 };
 
 module.exports = generators.Base.extend({
@@ -18,17 +33,17 @@ module.exports = generators.Base.extend({
             updateNotifier({pkg: pkg}).notify();
         },
 
-        getDirectoryList: function () {
+        showCurrentVersion: function () {
+            clear();
+            console.log(chalk.white.underline('You are running ' + pkg.name + ' version ' + pkg.version + '\n'));
+        },
+
+        buildMenuList: function () {
             this.choices = [];
+            this.choices.push('boilerplate');
 
-            var list = fs.readdirSync(this.templatePath('./'));
-
-            list.forEach( function (value, index) {
-                var path = fs.lstatSync(this.templatePath('./' + value));
-
-                if ( path.isDirectory() ) {
-                    this.choices.push(value);
-                }
+            plugins.forEach( function (plugin, index) {
+                this.choices.push(plugin.name + separator + chalk.underline(plugin.url));
             }.bind(this));
 
             this.choices.push(new inquirer.Separator());
@@ -52,17 +67,21 @@ module.exports = generators.Base.extend({
     },
 
     write: function () {
+        if ( this.answer === 'exit' ) {
+            process.exit(1);
+        }
+
         var answer = this.answers;
         var bowerJson = this.destinationPath('./bower.json');
 
-        if ( answer === 'exit' ) {
-            process.exit(1);
-        }
+        var choice = _.filter(plugins, function (plugin) {
+            return plugin.name === answer.split(separator)[0];
+        })[0];
 
         if ( answer === 'boilerplate' ) {
             try {
                 fs.openSync(bowerJson, 'r');
-                console.log('Boilerplate may have been installed.');
+                console.log(msgs.boilerplate);
                 process.exit(1);
             } catch (e) {
                 boilerplate.bind(this)();
@@ -71,25 +90,41 @@ module.exports = generators.Base.extend({
             try {
                 fs.openSync(bowerJson, 'r');
             } catch(e) {
-                console.log('bower.json is not exist. Install boilerplate first.');
+                console.log(msgs.bower);
                 process.exit(1);
             }
 
-            var path = this.templatePath('./' + answer);
-            var registry = require(path + '/registry.json');
-            var files = fs.readdirSync(path);
+            console.log(msgs.downloading);
 
-            files.forEach( function (value, index) {
-                if ( helper.isJs(value) ) {
-                    copyAssets.bind(this)(value, paths.js);
-                } else if ( helper.isScss(value) ) {
-                    copyAssets.bind(this)(value, paths.scss);
-                } else if ( helper.isFont(value) ) {
-                    copyAssets.bind(this)(value, paths.font);
+            choice.assets.forEach(function (asset, index) {
+                if (helper.isJs(asset)) {
+                    new download()
+                        .get(asset)
+                        .dest(this.destinationPath(paths.js))
+                        .run();
+
+                    logDownloadedAsset(paths.js);
+                } else if (helper.isCss(asset)) {
+                    var filename = fileName(asset);
+
+                    new download()
+                        .get(asset)
+                        .rename(getScssFileName(filename))
+                        .dest(this.destinationPath(paths.scss))
+                        .run();
+
+                    logDownloadedAsset(paths.scss);
+                } else if (helper.isFont(asset)) {
+                    new download()
+                        .get(asset)
+                        .dest(this.destinationPath(paths.font))
+                        .run();
+
+                    logDownloadedAsset(paths.font);
                 }
             }.bind(this));
 
-            updateBower.bind(this)(registry.name, registry.version);
+            updateBower.bind(this)(choice.registryName, choice.version);
         }
 
         function boilerplate() {
@@ -102,6 +137,14 @@ module.exports = generators.Base.extend({
                 this.templatePath('_gitignore'),
                 this.destinationPath('./.gitignore')
             );
+        }
+
+        function getScssFileName(name) {
+            return '_' + name + '.scss';
+        }
+
+        function logDownloadedAsset(path) {
+            console.log(chalk.green(msgs.created) + path);
         }
 
         function copyAssets(file, destination) {
