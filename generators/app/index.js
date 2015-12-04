@@ -67,7 +67,7 @@ module.exports = generators.Base.extend({
     },
 
     write: function () {
-        if ( this.answer === 'exit' ) {
+        if ( this.answers === 'exit' ) {
             process.exit(1);
         }
 
