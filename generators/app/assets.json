@@ -151,6 +151,15 @@
                 "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/id.js"
             ],
             "url": "github.com/moment/moment"
+        },
+        {
+            "name": "jquery-one-page-nav",
+            "registryName": "jQuery-One-Page-Nav",
+            "version": "~3.0.0",
+            "assets": [
+                "https://raw.githubusercontent.com/davist11/jQuery-One-Page-Nav/v3.0.0/jquery.nav.js"
+            ],
+            "url": "github.com/davist11/jQuery-One-Page-Nav"
         }
     ]
 }
