@@ -35,7 +35,9 @@ module.exports = generators.Base.extend({
 
         showCurrentVersion: function () {
             clear();
-            console.log(chalk.white.underline('You are running ' + pkg.name + ' version ' + pkg.version + '\n'));
+            console.log('\n');
+            console.log(chalk.black.bgYellow.underline(' You are running ' + pkg.name + ' version ' + pkg.version + ' '));
+            console.log(chalk.black.bgYellow.underline(' Ecmascript 6 version \n'));
         },
 
         buildMenuList: function () {
