@@ -1,23 +1,27 @@
-var path = require('path');
+const path = require('path')
 
 module.exports = {
-    isJs: function (file) {
-        return /\.js$/gi.test(file);
+    isJs(file) {
+        return /\.js$/gi.test(file)
     },
 
-    isScss: function (file) {
-        return /\.scss$/gi.test(file);
+    isScss(file) {
+        return /\.scss$/gi.test(file)
     },
 
-    isCss: function (file) {
-        return /\.css$/gi.test(file);
+    isCss(file) {
+        return /\.css$/gi.test(file)
     },
 
-    isFont: function (file) {
-        return /\.(ttf|otf|woff|woff2|eot)$/gi.test(file);
+    isFont(file) {
+        return /\.(ttf|otf|woff|woff2|eot)$/gi.test(file)
     },
 
-    getFilename: function (filePath) {
-        return path.basename(filePath, path.extname(filePath));
+    getFilename(filePath) {
+        return path.basename(filePath, path.extname(filePath))
+    },
+
+    getScssFileName(filename) {
+        return `_${filename}.scss`
     }
-};
+}

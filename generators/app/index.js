@@ -1,188 +1,152 @@
-var generators      = require('yeoman-generator');
-var updateNotifier  = require('update-notifier');
-var pkg             = require('../../package.json');
-var jsonPretty      = require('json-pretty');
-var fs              = require('fs');
-var helper          = require('./helper.js');
-var inquirer        = require('inquirer');
-var chalk           = require('chalk');
-var clear           = require('clear');
-var plugins         = require('./assets.json').data;
-var download        = require('download');
+'use strict'
 
-var paths = {
+const generators      = require('yeoman-generator')
+const updateNotifier  = require('update-notifier')
+const pkg             = require('../../package.json')
+const jsonPretty      = require('json-pretty')
+const fs              = require('fs')
+const helper          = require('./helper.js')
+const inquirer        = require('inquirer')
+const chalk           = require('chalk')
+const clear           = require('clear')
+const plugins         = require('./assets.json').data
+const download        = require('download')
+const log             = console.log
+
+const paths = {
     js: './dev/js/vendor/',
     scss: './dev/sass/plugin/',
     font: './dev/fonts/'
-};
+}
 
-var separator = ' —';
-
-var msgs = {
+const msgs = {
     boilerplate: 'Boilerplate may have been installed.',
     bower: 'bower.json is not exist. Install boilerplate first.',
     downloading: 'Downloading asset(s) from cdn...',
-    created: 'asset will be created in '
-};
+    created: 'asset will be created in'
+}
 
 module.exports = generators.Base.extend({
     initializing: {
-        checkUpdate: function () {
-            updateNotifier({pkg: pkg}).notify();
+        checkUpdate() {
+            updateNotifier({pkg: pkg}).notify()
+        },
+        
+        showCurrentVersion() {
+            clear()
+            log(chalk.white.underline(`You are running ${pkg.name} version ${pkg.version}\n`))
+            log(chalk.black.bgYellow.underline(' Ecmascript 6 version \n'))
         },
 
-        showCurrentVersion: function () {
-            clear();
-            console.log('\n');
-            console.log(chalk.black.bgYellow.underline(' You are running ' + pkg.name + ' version ' + pkg.version + ' '));
-            console.log(chalk.black.bgYellow.underline(' Ecmascript 6 version \n'));
-        },
+        buildMenuList() {
+            this.choices = []
+            this.choices.push('boilerplate')
 
-        buildMenuList: function () {
-            this.choices = [];
-            this.choices.push('boilerplate');
+            plugins.forEach( (plugin, i) => {
+                this.choices.push(`${plugin.name} - ${chalk.underline(plugin.url)}`)
+            })
 
-            plugins.forEach( function (plugin, index) {
-                this.choices.push(plugin.name + separator + chalk.underline(plugin.url));
-            }.bind(this));
-
-            this.choices.push(new inquirer.Separator());
-            this.choices.push('exit');
-            this.choices.push(new inquirer.Separator());
+            this.choices.push(new inquirer.Separator())
+            this.choices.push('exit')
+            this.choices.push(new inquirer.Separator())
         }
     },
 
-    prompting: function () {
-        var done = this.async();
+    prompting() {
+        let done = this.async()
 
         this.prompt({
             type: 'list',
             name: 'options',
             message: 'What can I do for you?',
             choices: this.choices
-        }, function (answers) {
-            this.answers = answers.options;
-            done();
-        }.bind(this));
+        }, answers => {
+            this.answers = answers.options
+            done()
+        })
     },
 
-    write: function () {
+    write() {
         if ( this.answers === 'exit' ) {
-            process.exit(1);
+            process.exit(1)
         }
 
-        var answer = this.answers;
-        var bowerJson = this.destinationPath('./bower.json');
-
-        var choice = plugins.filter( function (plugin) {
-            return plugin.name === answer.split(separator)[0];
-        })[0];
+        const BOWER_FILE = this.destinationPath('./bower.json')
+        let answer = this.answers
+        let choice = plugins.filter( plugin => plugin.name === answer.split(' - ')[0] )[0]
 
         if ( answer === 'boilerplate' ) {
             try {
-                fs.openSync(bowerJson, 'r');
-                console.log(msgs.boilerplate);
-                process.exit(1);
+                fs.openSync(BOWER_FILE, 'r')
+                log(msgs.boilerplate)
+                process.exit(1)
             } catch (e) {
-                boilerplate.bind(this)();
+                boilerplate.bind(this)()
             }
         } else {
             try {
-                fs.openSync(bowerJson, 'r');
+                fs.openSync(BOWER_FILE, 'r')
             } catch(e) {
-                console.log(msgs.bower);
-                process.exit(1);
+                log(msgs.bower)
+                process.exit(1)
             }
 
-            console.log(msgs.downloading);
+            log(msgs.downloading)
 
-            choice.assets.forEach(function (asset, index) {
-                if (helper.isJs(asset)) {
+            choice.assets.forEach( (asset, index) => {
+                let filetype
+
+                if ( helper.isJs(asset) )
+                    filetype = 'js'
+                else if ( helper.isCss(asset) )
+                    filetype = 'scss'
+                else if ( helper.isFont(asset) )
+                    filetype = 'font'
+
+                if ( filetype !== 'scss' ) {
                     new download()
                         .get(asset)
-                        .dest(this.destinationPath(paths.js))
-                        .run();
-
-                    logDownloadedAsset(paths.js);
-                } else if (helper.isCss(asset)) {
-                    var filename = helper.getFilename(asset);
+                        .dest(this.destinationPath(paths[filetype]))
+                        .run()
+                } else {
+                    let filename = helper.getFilename(asset)
 
                     new download()
                         .get(asset)
-                        .rename(getScssFileName(filename))
-                        .dest(this.destinationPath(paths.scss))
-                        .run();
-
-                    logDownloadedAsset(paths.scss);
-                } else if (helper.isFont(asset)) {
-                    new download()
-                        .get(asset)
-                        .dest(this.destinationPath(paths.font))
-                        .run();
-
-                    logDownloadedAsset(paths.font);
+                        .rename(helper.getScssFileName(filename))
+                        .dest(this.destinationPath(paths[filetype]))
+                        .run()
                 }
-            }.bind(this));
 
-            updateBower.bind(this)(choice.registryName, choice.version);
+                log(`${chalk.green(msgs.created)} ${paths[filetype]}`)
+            })
+
+            updateBower(choice.registryName, choice.version)
         }
 
         function boilerplate() {
             this.fs.copy(
-                this.templatePath(answer + '/**/*'),
+                this.templatePath(`${answer}/**/*`),
                 this.destinationPath('./')
-            );
+            )
 
             this.fs.copy(
                 this.templatePath('_gitignore'),
                 this.destinationPath('./.gitignore')
-            );
-        }
-
-        function getScssFileName(name) {
-            return '_' + name + '.scss';
-        }
-
-        function logDownloadedAsset(path) {
-            console.log(chalk.green(msgs.created) + path);
-        }
-
-        function copyAssets(file, destination) {
-            this.fs.copy(
-                this.templatePath(answer + '/' + file),
-                this.destinationPath(destination + file)
-            );
+            )
         }
 
         function updateBower(name, version) {
-            var _this = this;
-            var bowerJson = this.destinationPath('./bower.json');
-
-            fs.readFile(bowerJson, function (err, data) {
+            fs.readFile(BOWER_FILE, (err, data) => {
                 if ( err ) throw err;
 
-                var json = JSON.parse(data);
+                let content = JSON.parse(data)
+                content.dependencies[name] = version
 
-                json.dependencies[name] = version;
-
-                fs.writeFile(bowerJson, JSON.stringify(json), function (err) {
+                fs.writeFile(BOWER_FILE, jsonPretty(content), err => {
                     if ( err ) throw err;
-
-                    beautifyBowerJson(bowerJson);
-                });
-            });
-        }
-
-        function beautifyBowerJson(bowerJson) {
-            fs.readFile(bowerJson, function (err, data) {
-                if ( err ) throw err;
-
-                var output = jsonPretty(JSON.parse(data));
-
-                fs.writeFile(bowerJson, output, function (error) {
-                    if ( error ) throw error;
-                });
-            });
+                })
+            })
         }
     }
-});
+})
