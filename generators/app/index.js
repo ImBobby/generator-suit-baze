@@ -9,7 +9,6 @@ var chalk           = require('chalk');
 var clear           = require('clear');
 var plugins         = require('./assets.json').data;
 var download        = require('download');
-var fileName        = require('file-name');
 
 var paths = {
     js: './dev/js/vendor/',
@@ -106,7 +105,7 @@ module.exports = generators.Base.extend({
 
                     logDownloadedAsset(paths.js);
                 } else if (helper.isCss(asset)) {
-                    var filename = fileName(asset);
+                    var filename = helper.getFilename(asset);
 
                     new download()
                         .get(asset)
