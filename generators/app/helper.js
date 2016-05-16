@@ -1,3 +1,4 @@
+var path = require('path');
 
 module.exports = {
     isJs: function (file) {
@@ -14,5 +15,9 @@ module.exports = {
 
     isFont: function (file) {
         return /\.(ttf|otf|woff|woff2|eot)$/gi.test(file);
+    },
+
+    getFilename: function (filePath) {
+        return path.basename(filePath, path.extname(filePath));
     }
 };
