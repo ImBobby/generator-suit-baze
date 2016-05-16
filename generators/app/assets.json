@@ -40,9 +40,9 @@
         {
             "name": "baze-validate",
             "registryName": "baze-validation",
-            "version": "~1.0.2",
+            "version": "~1.1.0",
             "assets": [
-                "https://raw.githubusercontent.com/ImBobby/Baze-Validation/master/baze.validate.js"
+                "https://raw.githubusercontent.com/ImBobby/Baze-Validation/1.1.0/baze.validate.js"
             ],
             "url": "github.com/ImBobby/Baze-Validation"
         },
