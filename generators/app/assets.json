@@ -163,7 +163,7 @@
         },
         {
             "name": "fullpage.js",
-            "registryName": "fullpage",
+            "registryName": "fullpage.js",
             "version": "~2.7.9",
             "assets": [
                 "https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.9/jquery.fullPage.js",
