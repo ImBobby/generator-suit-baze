@@ -133,6 +133,11 @@ module.exports = generators.Base.extend({
                 this.templatePath('_gitignore'),
                 this.destinationPath('./.gitignore')
             )
+
+            this.fs.copy(
+                this.templatePath('_editorconfig'),
+                this.destinationPath('./.editorconfig')
+            )
         }
 
         function updateBower(name, version) {
