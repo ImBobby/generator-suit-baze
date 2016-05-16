@@ -8,7 +8,6 @@ var inquirer        = require('inquirer');
 var chalk           = require('chalk');
 var clear           = require('clear');
 var plugins         = require('./assets.json').data;
-var _               = require('lodash');
 var download        = require('download');
 var fileName        = require('file-name');
 
@@ -76,7 +75,7 @@ module.exports = generators.Base.extend({
         var answer = this.answers;
         var bowerJson = this.destinationPath('./bower.json');
 
-        var choice = _.filter(plugins, function (plugin) {
+        var choice = plugins.filter( function (plugin) {
             return plugin.name === answer.split(separator)[0];
         })[0];
 
