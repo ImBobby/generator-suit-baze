@@ -160,6 +160,17 @@
                 "https://raw.githubusercontent.com/davist11/jQuery-One-Page-Nav/v3.0.0/jquery.nav.js"
             ],
             "url": "github.com/davist11/jQuery-One-Page-Nav"
+        },
+        {
+            "name": "fullpage.js",
+            "registryName": "fullpage",
+            "version": "~2.7.9",
+            "assets": [
+                "https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.9/jquery.fullPage.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.9/vendors/jquery.slimscroll.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.9/jquery.fullPage.css"
+            ],
+            "url": "https://github.com/alvarotrigo/fullPage.js.git"
         }
     ]
 }
