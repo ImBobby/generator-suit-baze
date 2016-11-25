@@ -1,6 +1,6 @@
 {
   "name": "suit-baze",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "authors": [
     "Suitmedia"
   ],
@@ -11,20 +11,23 @@
     "url": "https://github.com/ImBobby/suit-baze"
   },
   "devDependencies": {
-    "autoprefixer": "^6.3.2",
-    "del": "^1.1.1",
+    "autoprefixer": "^6.5.3",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "del": "^2.2.2",
     "gulp": "^3.9.0",
-    "gulp-changed": "^1.0.0",
-    "gulp-clean-css": "^2.0.4",
-    "gulp-imagemin": "^2.0.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-changed": "^1.3.2",
+    "gulp-clean-css": "^2.0.13",
+    "gulp-imagemin": "^3.1.1",
     "gulp-livereload": "^1.1.1",
-    "gulp-load-plugins": "^0.9.0",
-    "gulp-postcss": "^6.1.0",
+    "gulp-load-plugins": "^1.4.0",
+    "gulp-postcss": "^6.2.0",
     "gulp-rename": "^1.2.0",
-    "gulp-sass": "^2.0.3",
-    "gulp-uglify": "^1.0.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0",
     "gulp-util": "^2.2.14",
-    "gulp-watch": "^4.2.3",
+    "gulp-watch": "^4.3.11",
     "gulp-webp": "^2.1.1"
   }
 }
