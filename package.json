@@ -1,6 +1,6 @@
 {
   "name": "generator-suit-baze",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "a Yeoman generator to generate boilerplate with built-in most-used plugins",
   "main": "index.js",
   "repository": {
