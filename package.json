@@ -22,7 +22,7 @@
     "download": "^4.4.3",
     "inquirer": "^1.2.3",
     "json-pretty": "0.0.1",
-    "update-notifier": "^0.5.0",
+    "update-notifier": "^2.1.0",
     "yeoman-generator": "^0.21.1"
   }
 }
