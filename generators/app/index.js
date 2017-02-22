@@ -13,6 +13,8 @@ const plugins         = require('./assets.json').data
 const download        = require('download')
 const log             = console.log
 
+const pwd = process.env.PWD
+
 const paths = {
     js: './dev/js/vendor/',
     scss: './dev/sass/plugin/',
@@ -26,14 +28,16 @@ const msgs = {
     created: 'asset will be created in'
 }
 
+const pluginScssFile = `${pwd}/dev/sass/plugin/_plugin.scss`
+
 module.exports = generators.Base.extend({
     initializing: {
         checkUpdate() {
+            clear()
             updateNotifier({pkg: pkg}).notify()
         },
 
         showCurrentVersion() {
-            clear()
             log(chalk.white.underline(`You are running ${pkg.name} version ${pkg.version}\n`))
         },
 
@@ -115,6 +119,13 @@ module.exports = generators.Base.extend({
                         .rename(helper.getScssFileName(filename))
                         .dest(this.destinationPath(paths[filetype]))
                         .run()
+
+                    let content = fs.readFileSync(`${pluginScssFile}`, {
+                        encoding: 'utf8'
+                    })
+                    content += `\n@import "${helper.getFilename(filename)}";`
+
+                    fs.writeFileSync(`${pluginScssFile}`, content)
                 }
 
                 log(`${chalk.green(msgs.created)} ${paths[filetype]}`)
