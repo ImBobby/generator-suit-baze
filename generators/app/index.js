@@ -149,6 +149,12 @@ module.exports = generators.Base.extend({
                 this.templatePath('_editorconfig'),
                 this.destinationPath('./.editorconfig')
             )
+
+            fs.mkdirSync(`./_partials`)
+            this.fs.write(`./_partials/head.php`, '')
+            this.fs.write(`./_partials/header.php`, '')
+            this.fs.write(`./_partials/footer.php`, '')
+            this.fs.write(`./_partials/scripts.php`, '')
         }
 
         function updateBower(name, version) {
