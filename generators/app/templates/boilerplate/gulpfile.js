@@ -77,7 +77,8 @@ gulp.task('stylesheet:compile', () => {
         .src(`${paths.dev}sass/main.scss`)
         .pipe(plugins.sass(options).on('error', plugins.sass.logError))
         .pipe(plugins.postcss([
-            prefixer(autoprefixOpts)
+            prefixer(autoprefixOpts),
+            require('postcss-object-fit-images')
         ]))
         .pipe(gulp.dest(`${paths.build}css`))
 })
@@ -96,7 +97,8 @@ gulp.task('stylesheet:compile_and_minify', () => {
         .src(`${paths.dev}sass/main.scss`)
         .pipe(plugins.sass(options))
         .pipe(plugins.postcss([
-            prefixer(autoprefixOpts)
+            prefixer(autoprefixOpts),
+            require('postcss-object-fit-images')
         ]))
         .pipe(gulp.dest(`${paths.build}css`))
 })
@@ -122,13 +124,13 @@ gulp.task('stylesheet:copy_vendor_css', () => {
 
 gulp.task('javascript:compile', () => {
     return gulp
-        .src(`${paths.dev}js/main.js`)
+        .src(`${paths.dev}js/*.js`)
         .pipe(plugins.babel({
             presets: ['es2015', 'react']
         }))
         .on('error', function (err) {
             console.log('>>> Error', err)
-
+            beep(2)
             this.emit('end')
         })
         .pipe(plugins.rename(renameOpts))
@@ -137,13 +139,13 @@ gulp.task('javascript:compile', () => {
 
 gulp.task('javascript:compile_and_minify', () => {
     return gulp
-        .src(`${paths.dev}js/main.js`)
+        .src(`${paths.dev}js/*.js`)
         .pipe(plugins.babel({
             presets: ['es2015']
         }))
         .on('error', function (err) {
             console.log('>>> Error', err)
-
+            beep(2)
             this.emit('end')
         })
         .pipe(plugins.uglify())
@@ -189,7 +191,8 @@ gulp.task('image:compress', () => {
     let imageFormats = [
         `${paths.dev}img/*.png`,
         `${paths.dev}img/*.jpg`,
-        `${paths.dev}img/*.gif`
+        `${paths.dev}img/*.gif`,
+        `${paths.dev}img/*.svg`
     ]
 
     return gulp
@@ -280,7 +283,7 @@ gulp.task('watch', ['default'], () => {
     gulp.watch(`${paths.dev}sass/**/*.scss`, ['stylesheet:compile'])
 
     // esNext
-    gulp.watch(`${paths.dev}js/main.js`, ['javascript:compile'])
+    gulp.watch(`${paths.dev}js/*.js`, ['javascript:compile'])
 
     // Uglify
     gulp.watch(`${paths.dev}js/vendor/*.js`, ['javascript:copy_vendor_js'])

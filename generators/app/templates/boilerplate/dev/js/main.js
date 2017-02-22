@@ -8,18 +8,10 @@
     }
 
     const assets = {
-        _jquery_cdn     : `https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js`,
-        _jquery_local   : `${path.js}jquery.min.js`,
-        _fastclick      : `${path.js}fastclick.min.js`
+        _objectFit      : `${path.js}object-fit-images.min.js`
     }
 
     const Site = {
-        fastClick() {
-            load(assets._fastclick).then(() => {
-                FastClick.attach(document.body)
-            })
-        },
-
         enableActiveStateMobile() {
             if ( document.addEventListener ) {
                 document.addEventListener('touchstart', () => {}, true)
@@ -27,30 +19,24 @@
         },
 
         WPViewportFix() {
-            if ( navigator.userAgent.match(/IEMobile\/10\.0/) ) {
-                let style   = document.createElement('style'),
-                    fix     = document.createTextNode('@-ms-viewport{width:auto!important}')
+            if ( '-ms-user-select' in document.documentElement.style && navigator.userAgent.match(/IEMobile/) ) {
+                let style = document.createElement('style')
+                let fix = document.createTextNode('@-ms-viewport{width:auto!important}')
 
                 style.appendChild(fix)
-                document.getElementsByTagName('head')[0].appendChild(style)
+                document.head.appendChild(style)
             }
         },
 
-        loadAdditionalScripts() {
-            let scripts = [].filter.call(document.scripts, script => {
-                let src = $.trim(script.getAttribute('data-src'))
-
-                return src && src !== null
-            })
-
-            scripts.forEach( script => {
-                load(script.getAttribute('data-src'))
+        objectFitPolyfill() {
+            load(assets._objectFit).then( () => {
+                objectFitImages()
             })
         }
     }
 
     Promise.all([
-        load(assets._jquery_cdn)
+        
     ]).then(() => {
         for (let fn in Site) {
             Site[fn]()
@@ -82,12 +68,11 @@
     function loadJSON(url) {
         return new Promise((resolve, reject) => {
             fetch(url).then(res => {
-                if ( res.ok )
-                    return res.json()
-
-                reject('Network response not ok')
-            }).then(data => {
-                resolve(data)
+                if ( res.ok ) {
+                    resolve(res.json())
+                } else {
+                    reject('Network response not ok')
+                }
             }).catch(e => {
                 reject(e)
             })
