@@ -13,7 +13,7 @@ const plugins         = require('./assets.json').data
 const download        = require('download')
 const log             = console.log
 
-const pwd = process.env.PWD
+const pwd = process.env.PWD || process.cwd()
 
 const paths = {
     js: './dev/js/vendor/',
