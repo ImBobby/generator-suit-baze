@@ -6,6 +6,7 @@
 const gulp        = require('gulp')
 const del         = require('del')
 const prefixer    = require('autoprefixer')
+const beep        = require('beepbeep')
 const plugins     = require('gulp-load-plugins')()
 
 const paths = {
