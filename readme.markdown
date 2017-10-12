@@ -1,5 +1,7 @@
 # [Suit-baze](https://github.com/ImBobby/suit-baze) generator
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ImBobby/generator-suit-baze.svg)](https://greenkeeper.io/)
+
 
 > a Yeoman generator to generate boilerplate with built-in most-used plugins
 
