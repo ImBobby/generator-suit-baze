@@ -7,6 +7,9 @@ const gulp        = require('gulp')
 const del         = require('del')
 const prefixer    = require('autoprefixer')
 const beep        = require('beepbeep')
+const rollup      = require('rollup')
+const rollupBabel = require('rollup-plugin-babel')
+const rUglify     = require('rollup-plugin-uglify')
 const plugins     = require('gulp-load-plugins')()
 
 const paths = {
@@ -84,39 +87,53 @@ gulp.task('stylesheet:copy_vendor_css', () => {
 /* Task: Ecmascript next
 --------------------------------------------------------------------------------- */
 
-gulp.task('javascript:compile', () => {
-    return gulp
-        .src(`${paths.dev}js/*.js`)
-        .pipe(plugins.babel({
-            presets: ['env'],
-            plugins: ['transform-object-rest-spread']
-        }))
-        .on('error', function (err) {
-            console.log('>>> Error', err)
-            beep(2)
-            this.emit('end')
-        })
-        .pipe(plugins.rename(renameOpts))
-        .pipe(gulp.dest(`${paths.build}js`))
-        .pipe(plugins.livereload())
+gulp.task('javascript:compile', async () => {
+    const bundle = await rollup.rollup({
+        input: './dev/js/main.js',
+        plugins: [
+            rollupBabel({
+                exclude: 'node_modules/**',
+                presets: [
+                    ['env', { modules: false }]
+                ],
+                plugins: [
+                    'transform-object-rest-spread'
+                ]
+            })
+        ]
+    })
+
+    await bundle.write({
+        file: './assets/js/main.min.js',
+        format: 'iife',
+        name: 'Site',
+        externalHelpers: false
+    })
 })
 
-gulp.task('javascript:compile_and_minify', () => {
-    return gulp
-        .src(`${paths.dev}js/*.js`)
-        .pipe(plugins.babel({
-            presets: ['env'],
-            plugins: ['transform-object-rest-spread']
-        }))
-        .on('error', function (err) {
-            console.log('>>> Error', err)
-            beep(2)
-            this.emit('end')
-        })
-        .pipe(plugins.uglify())
-        .pipe(plugins.rename(renameOpts))
-        .pipe(gulp.dest(`${paths.build}js`))
-        .pipe(plugins.livereload())
+gulp.task('javascript:compile_and_minify', async () => {
+    const bundle = await rollup.rollup({
+        input: './dev/js/main.js',
+        plugins: [
+            rollupBabel({
+                exclude: 'node_modules/**',
+                presets: [
+                    ['env', { modules: false }]
+                ],
+                plugins: [
+                    'transform-object-rest-spread'
+                ]
+            }),
+            rUglify()
+        ]
+    })
+
+    await bundle.write({
+        file: './assets/js/main.min.js',
+        format: 'iife',
+        name: 'Site',
+        externalHelpers: false
+    })
 })
 
 
@@ -179,30 +196,6 @@ gulp.task('image:compress', () => {
 
 
 
-/* Task: Convert image to WebP
---------------------------------------------------------------------------------- */
-
-gulp.task('image:convert_to_webp', () => {
-    let imageFormats = [
-        `${paths.dev}img/webp/*.png`,
-        `${paths.dev}img/webp/*.jpg`
-    ]
-
-    let options = {
-        quality: 80
-    }
-
-    return gulp
-        .src(imageFormats)
-        .pipe(plugins.changed(`${paths.build}img/webp/`))
-        .pipe(plugins.webp(options))
-        .pipe(gulp.dest(`${paths.build}img/webp/`))
-        .pipe(plugins.livereload())
-})
-
-
-
-
 /* Task: Copy fonts
 --------------------------------------------------------------------------------- */
 
@@ -239,7 +232,6 @@ gulp.task('default', [
     'javascript:compile',
     'javascript:copy_vendor_js',
     'image:compress',
-    'image:convert_to_webp',
     'fonts'
 ])
 
@@ -262,9 +254,6 @@ gulp.task('watch', ['default'], () => {
 
     // Imagemin
     gulp.watch(`${paths.dev}img/*`, ['image:compress'])
-
-    // WebP
-    gulp.watch(`${paths.dev}img/webp/*`, ['image:convert_to_webp'])
 
     // Fonts
     gulp.watch(`${paths.dev}fonts/*`, ['fonts'])
@@ -295,7 +284,6 @@ gulp.task('production', [
     'javascript:compile_and_minify',
     'javascript:minify_vendor_js',
     'image:compress',
-    'image:convert_to_webp',
     'fonts'
 ])
 

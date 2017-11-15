@@ -30,6 +30,7 @@ html {
 }
 
 body {
+    text-decoration-skip: ink;
     color: $black90;
 }
 
@@ -45,6 +46,10 @@ a {
 
 .block {
     margin-bottom: $space;
+}
+
+.block-half {
+    margin-bottom: ($space / 2);
 }
 
 .container {
