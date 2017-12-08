@@ -9,7 +9,7 @@ const helper          = require('./helper.js')
 const inquirer        = require('inquirer')
 const chalk           = require('chalk')
 const clear           = require('clear')
-const plugins         = require('./assets.json').data
+const plugins         = require('./assets.json')
 const download        = require('download')
 const log             = console.log
 
