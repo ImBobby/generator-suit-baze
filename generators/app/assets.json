@@ -39,9 +39,9 @@
     {
         "name": "baze-validate",
         "registryName": "baze-validation",
-        "version": "~1.1.0",
+        "version": "~1.2.0",
         "assets": [
-            "https://raw.githubusercontent.com/ImBobby/Baze-Validation/1.1.0/baze.validate.js"
+            "https://raw.githubusercontent.com/ImBobby/Baze-Validation/1.2.0/baze.validate.js"
         ],
         "url": "github.com/ImBobby/Baze-Validation"
     },
@@ -103,14 +103,24 @@
     {
         "name": "font-awesome",
         "registryName": "font-awesome",
-        "version": "fontawesome#~4.7.0",
+        "version": "fontawesome#~5.0.10",
         "assets": [
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css",
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/FontAwesome.otf",
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.eot",
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf",
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff",
-            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2"
+            "https://use.fontawesome.com/releases/v5.0.10/css/all.css",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-brands-400.eot",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-brands-400.woff2",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-brands-400.woff",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-brands-400.ttf",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-brands-400.svg",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-regular-400.eot",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-regular-400.woff2",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-regular-400.woff",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-regular-400.ttf",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-regular-400.svg",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-solid-900.eot",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-solid-900.woff2",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-solid-900.woff",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-solid-900.ttf",
+            "https://use.fontawesome.com/releases/v5.0.10/webfonts/fa-solid-900.svg"
         ],
         "url": "github.com/FortAwesome/Font-Awesome/"
     },
@@ -180,5 +190,16 @@
             "https://cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.js"
         ],
         "url": "https://github.com/ramda/ramda"
+    },
+    {
+        "name": "air datepicker",
+        "registryName": "air datepicker",
+        "version": "~2.2.3",
+        "assets": [
+            "https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css"
+        ],
+        "url": "https://github.com/t1m0n/air-datepicker"
     }
 ]

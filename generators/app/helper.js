@@ -14,7 +14,7 @@ module.exports = {
     },
 
     isFont(file) {
-        return /\.(ttf|otf|woff|woff2|eot)$/gi.test(file)
+        return /\.(ttf|otf|woff|woff2|eot|svg)$/gi.test(file)
     },
 
     getFilename(filePath) {
