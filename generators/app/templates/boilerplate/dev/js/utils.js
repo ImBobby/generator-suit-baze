@@ -1,3 +1,5 @@
+export const IS_ACTIVE = 'is-active'
+
 export function noop() {}
 
 export function log(n) {
@@ -159,4 +161,43 @@ export function exist(selector) {
             resolve(elems)
         reject(`no element found for ${selector}`)
     })
+}
+
+export function toJqueryObject(elements) {
+    return $(elements)
+}
+
+export function preventDefault(event) {
+    event.preventDefault()
+    return event
+}
+
+export function getAttr(attr) {
+    return function (el) {
+        return el.getAttribute(attr)
+    }
+}
+
+export function createSlider(opts = {}) {
+    return function ($el) {
+        return new Promise((resolve, reject) => {
+            if ( !$el.length ) {
+                reject(`No element ${$el} found.`)
+            }
+
+            const defaults = {
+                accessibility: false,
+                draggable: false
+            }
+
+            $el.on('init', () => {
+                resolve($el)
+            })
+
+            $el.slick({
+                ...defaults,
+                ...opts
+            })
+        })
+    }
 }
