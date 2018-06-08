@@ -1,6 +1,6 @@
 /*!
- * modernizr v3.5.0
- * Build https://modernizr.com/download?-cssanimations-csscalc-csscolumns-cssgradients-csspositionsticky-csstransforms-csstransforms3d-csstransitions-flexbox-flexboxlegacy-flexboxtweener-geolocation-history-inputtypes-localstorage-sessionstorage-touchevents-webworkers-addtest-mq-setclasses-dontmin
+ * modernizr v3.6.0
+ * Build https://modernizr.com/download?-cssanimations-csscolumns-cssgradients-cssgrid_cssgridlegacy-csspointerevents-csspositionsticky-csstransforms-csstransforms3d-csstransitions-flexbox-flexboxlegacy-flexboxtweener-inputtypes-localstorage-preserve3d-sessionstorage-touchevents-webworkers-addtest-mq-setclasses-shiv-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -39,7 +39,7 @@
 
   var ModernizrProto = {
     // The current version, dummy
-    _version: '3.5.0',
+    _version: '3.6.0',
 
     // Any settings that don't work as separate modules
     // can go in here as configuration.
@@ -86,86 +86,6 @@
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-
-/*!
-{
-  "name": "Geolocation API",
-  "property": "geolocation",
-  "caniuse": "geolocation",
-  "tags": ["media"],
-  "notes": [{
-    "name": "MDN documentation",
-    "href": "https://developer.mozilla.org/en-US/docs/WebAPI/Using_geolocation"
-  }],
-  "polyfills": [
-    "joshuabell-polyfill",
-    "webshims",
-    "geo-location-javascript",
-    "geolocation-api-polyfill"
-  ]
-}
-!*/
-/* DOC
-Detects support for the Geolocation API for users to provide their location to web applications.
-*/
-
-  // geolocation is often considered a trivial feature detect...
-  // Turns out, it's quite tricky to get right:
-  //
-  // Using !!navigator.geolocation does two things we don't want. It:
-  //   1. Leaks memory in IE9: github.com/Modernizr/Modernizr/issues/513
-  //   2. Disables page caching in WebKit: webk.it/43956
-  //
-  // Meanwhile, in Firefox < 8, an about:config setting could expose
-  // a false positive that would throw an exception: bugzil.la/688158
-
-  Modernizr.addTest('geolocation', 'geolocation' in navigator);
-
-/*!
-{
-  "name": "History API",
-  "property": "history",
-  "caniuse": "history",
-  "tags": ["history"],
-  "authors": ["Hay Kranen", "Alexander Farkas"],
-  "notes": [{
-    "name": "W3C Spec",
-    "href": "https://www.w3.org/TR/html51/browsers.html#the-history-interface"
-  }, {
-    "name": "MDN documentation",
-    "href": "https://developer.mozilla.org/en-US/docs/Web/API/window.history"
-  }],
-  "polyfills": ["historyjs", "html5historyapi"]
-}
-!*/
-/* DOC
-Detects support for the History API for manipulating the browser session history.
-*/
-
-  Modernizr.addTest('history', function() {
-    // Issue #733
-    // The stock browser on Android 2.2 & 2.3, and 4.0.x returns positive on history support
-    // Unfortunately support is really buggy and there is no clean way to detect
-    // these bugs, so we fall back to a user agent sniff :(
-    var ua = navigator.userAgent;
-
-    // We only want Android 2 and 4.0, stock browser, and not Chrome which identifies
-    // itself as 'Mobile Safari' as well, nor Windows Phone (issue #1471).
-    if ((ua.indexOf('Android 2.') !== -1 ||
-        (ua.indexOf('Android 4.0') !== -1)) &&
-        ua.indexOf('Mobile Safari') !== -1 &&
-        ua.indexOf('Chrome') === -1 &&
-        ua.indexOf('Windows Phone') === -1 &&
-    // Since all documents on file:// share an origin, the History apis are
-    // blocked there as well
-        location.protocol !== 'file:'
-    ) {
-      return false;
-    }
-
-    // Return the regular check
-    return (window.history && 'pushState' in window.history);
-  });
 
 /*!
 {
@@ -410,6 +330,342 @@ Detects support for the basic `Worker` API from the Web Workers spec. Web Worker
 
   }
 
+  ;
+
+/**
+  * @optionName html5shiv
+  * @optionProp html5shiv
+  */
+
+  // Take the html5 variable out of the html5shiv scope so we can return it.
+  var html5;
+  if (!isSVG) {
+    /**
+     * @preserve HTML5 Shiv 3.7.3 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed
+     */
+    ;(function(window, document) {
+      /** version */
+      var version = '3.7.3';
+
+      /** Preset options */
+      var options = window.html5 || {};
+
+      /** Used to skip problem elements */
+      var reSkip = /^<|^(?:button|map|select|textarea|object|iframe|option|optgroup)$/i;
+
+      /** Not all elements can be cloned in IE **/
+      var saveClones = /^(?:a|b|code|div|fieldset|h1|h2|h3|h4|h5|h6|i|label|li|ol|p|q|span|strong|style|table|tbody|td|th|tr|ul)$/i;
+
+      /** Detect whether the browser supports default html5 styles */
+      var supportsHtml5Styles;
+
+      /** Name of the expando, to work with multiple documents or to re-shiv one document */
+      var expando = '_html5shiv';
+
+      /** The id for the the documents expando */
+      var expanID = 0;
+
+      /** Cached data for each document */
+      var expandoData = {};
+
+      /** Detect whether the browser supports unknown elements */
+      var supportsUnknownElements;
+
+      (function() {
+        try {
+          var a = document.createElement('a');
+          a.innerHTML = '<xyz></xyz>';
+          //if the hidden property is implemented we can assume, that the browser supports basic HTML5 Styles
+          supportsHtml5Styles = ('hidden' in a);
+
+          supportsUnknownElements = a.childNodes.length == 1 || (function() {
+            // assign a false positive if unable to shiv
+            (document.createElement)('a');
+            var frag = document.createDocumentFragment();
+            return (
+              typeof frag.cloneNode == 'undefined' ||
+                typeof frag.createDocumentFragment == 'undefined' ||
+                typeof frag.createElement == 'undefined'
+            );
+          }());
+        } catch(e) {
+          // assign a false positive if detection fails => unable to shiv
+          supportsHtml5Styles = true;
+          supportsUnknownElements = true;
+        }
+
+      }());
+
+      /*--------------------------------------------------------------------------*/
+
+      /**
+       * Creates a style sheet with the given CSS text and adds it to the document.
+       * @private
+       * @param {Document} ownerDocument The document.
+       * @param {String} cssText The CSS text.
+       * @returns {StyleSheet} The style element.
+       */
+      function addStyleSheet(ownerDocument, cssText) {
+        var p = ownerDocument.createElement('p'),
+          parent = ownerDocument.getElementsByTagName('head')[0] || ownerDocument.documentElement;
+
+        p.innerHTML = 'x<style>' + cssText + '</style>';
+        return parent.insertBefore(p.lastChild, parent.firstChild);
+      }
+
+      /**
+       * Returns the value of `html5.elements` as an array.
+       * @private
+       * @returns {Array} An array of shived element node names.
+       */
+      function getElements() {
+        var elements = html5.elements;
+        return typeof elements == 'string' ? elements.split(' ') : elements;
+      }
+
+      /**
+       * Extends the built-in list of html5 elements
+       * @memberOf html5
+       * @param {String|Array} newElements whitespace separated list or array of new element names to shiv
+       * @param {Document} ownerDocument The context document.
+       */
+      function addElements(newElements, ownerDocument) {
+        var elements = html5.elements;
+        if(typeof elements != 'string'){
+          elements = elements.join(' ');
+        }
+        if(typeof newElements != 'string'){
+          newElements = newElements.join(' ');
+        }
+        html5.elements = elements +' '+ newElements;
+        shivDocument(ownerDocument);
+      }
+
+      /**
+       * Returns the data associated to the given document
+       * @private
+       * @param {Document} ownerDocument The document.
+       * @returns {Object} An object of data.
+       */
+      function getExpandoData(ownerDocument) {
+        var data = expandoData[ownerDocument[expando]];
+        if (!data) {
+          data = {};
+          expanID++;
+          ownerDocument[expando] = expanID;
+          expandoData[expanID] = data;
+        }
+        return data;
+      }
+
+      /**
+       * returns a shived element for the given nodeName and document
+       * @memberOf html5
+       * @param {String} nodeName name of the element
+       * @param {Document|DocumentFragment} ownerDocument The context document.
+       * @returns {Object} The shived element.
+       */
+      function createElement(nodeName, ownerDocument, data){
+        if (!ownerDocument) {
+          ownerDocument = document;
+        }
+        if(supportsUnknownElements){
+          return ownerDocument.createElement(nodeName);
+        }
+        if (!data) {
+          data = getExpandoData(ownerDocument);
+        }
+        var node;
+
+        if (data.cache[nodeName]) {
+          node = data.cache[nodeName].cloneNode();
+        } else if (saveClones.test(nodeName)) {
+          node = (data.cache[nodeName] = data.createElem(nodeName)).cloneNode();
+        } else {
+          node = data.createElem(nodeName);
+        }
+
+        // Avoid adding some elements to fragments in IE < 9 because
+        // * Attributes like `name` or `type` cannot be set/changed once an element
+        //   is inserted into a document/fragment
+        // * Link elements with `src` attributes that are inaccessible, as with
+        //   a 403 response, will cause the tab/window to crash
+        // * Script elements appended to fragments will execute when their `src`
+        //   or `text` property is set
+        return node.canHaveChildren && !reSkip.test(nodeName) && !node.tagUrn ? data.frag.appendChild(node) : node;
+      }
+
+      /**
+       * returns a shived DocumentFragment for the given document
+       * @memberOf html5
+       * @param {Document} ownerDocument The context document.
+       * @returns {Object} The shived DocumentFragment.
+       */
+      function createDocumentFragment(ownerDocument, data){
+        if (!ownerDocument) {
+          ownerDocument = document;
+        }
+        if(supportsUnknownElements){
+          return ownerDocument.createDocumentFragment();
+        }
+        data = data || getExpandoData(ownerDocument);
+        var clone = data.frag.cloneNode(),
+          i = 0,
+          elems = getElements(),
+          l = elems.length;
+        for(;i<l;i++){
+          clone.createElement(elems[i]);
+        }
+        return clone;
+      }
+
+      /**
+       * Shivs the `createElement` and `createDocumentFragment` methods of the document.
+       * @private
+       * @param {Document|DocumentFragment} ownerDocument The document.
+       * @param {Object} data of the document.
+       */
+      function shivMethods(ownerDocument, data) {
+        if (!data.cache) {
+          data.cache = {};
+          data.createElem = ownerDocument.createElement;
+          data.createFrag = ownerDocument.createDocumentFragment;
+          data.frag = data.createFrag();
+        }
+
+
+        ownerDocument.createElement = function(nodeName) {
+          //abort shiv
+          if (!html5.shivMethods) {
+            return data.createElem(nodeName);
+          }
+          return createElement(nodeName, ownerDocument, data);
+        };
+
+        ownerDocument.createDocumentFragment = Function('h,f', 'return function(){' +
+                                                        'var n=f.cloneNode(),c=n.createElement;' +
+                                                        'h.shivMethods&&(' +
+                                                        // unroll the `createElement` calls
+                                                        getElements().join().replace(/[\w\-:]+/g, function(nodeName) {
+                                                          data.createElem(nodeName);
+                                                          data.frag.createElement(nodeName);
+                                                          return 'c("' + nodeName + '")';
+                                                        }) +
+          ');return n}'
+                                                       )(html5, data.frag);
+      }
+
+      /*--------------------------------------------------------------------------*/
+
+      /**
+       * Shivs the given document.
+       * @memberOf html5
+       * @param {Document} ownerDocument The document to shiv.
+       * @returns {Document} The shived document.
+       */
+      function shivDocument(ownerDocument) {
+        if (!ownerDocument) {
+          ownerDocument = document;
+        }
+        var data = getExpandoData(ownerDocument);
+
+        if (html5.shivCSS && !supportsHtml5Styles && !data.hasCSS) {
+          data.hasCSS = !!addStyleSheet(ownerDocument,
+                                        // corrects block display not defined in IE6/7/8/9
+                                        'article,aside,dialog,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}' +
+                                        // adds styling not present in IE6/7/8/9
+                                        'mark{background:#FF0;color:#000}' +
+                                        // hides non-rendered elements
+                                        'template{display:none}'
+                                       );
+        }
+        if (!supportsUnknownElements) {
+          shivMethods(ownerDocument, data);
+        }
+        return ownerDocument;
+      }
+
+      /*--------------------------------------------------------------------------*/
+
+      /**
+       * The `html5` object is exposed so that more elements can be shived and
+       * existing shiving can be detected on iframes.
+       * @type Object
+       * @example
+       *
+       * // options can be changed before the script is included
+       * html5 = { 'elements': 'mark section', 'shivCSS': false, 'shivMethods': false };
+       */
+      var html5 = {
+
+        /**
+         * An array or space separated string of node names of the elements to shiv.
+         * @memberOf html5
+         * @type Array|String
+         */
+        'elements': options.elements || 'abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output picture progress section summary template time video',
+
+        /**
+         * current version of html5shiv
+         */
+        'version': version,
+
+        /**
+         * A flag to indicate that the HTML5 style sheet should be inserted.
+         * @memberOf html5
+         * @type Boolean
+         */
+        'shivCSS': (options.shivCSS !== false),
+
+        /**
+         * Is equal to true if a browser supports creating unknown/HTML5 elements
+         * @memberOf html5
+         * @type boolean
+         */
+        'supportsUnknownElements': supportsUnknownElements,
+
+        /**
+         * A flag to indicate that the document's `createElement` and `createDocumentFragment`
+         * methods should be overwritten.
+         * @memberOf html5
+         * @type Boolean
+         */
+        'shivMethods': (options.shivMethods !== false),
+
+        /**
+         * A string to describe the type of `html5` object ("default" or "default print").
+         * @memberOf html5
+         * @type String
+         */
+        'type': 'default',
+
+        // shivs the document according to the specified `html5` object options
+        'shivDocument': shivDocument,
+
+        //creates a shived element
+        createElement: createElement,
+
+        //creates a shived documentFragment
+        createDocumentFragment: createDocumentFragment,
+
+        //extends list of elements
+        addElements: addElements
+      };
+
+      /*--------------------------------------------------------------------------*/
+
+      // expose html5
+      window.html5 = html5;
+
+      // shiv the document
+      shivDocument(document);
+
+      if(typeof module == 'object' && module.exports){
+        module.exports = html5;
+      }
+
+    }(typeof window !== 'undefined' ? window : this, document));
+  }
   ;
 
   /**
@@ -720,36 +976,6 @@ Detects support for the basic `Worker` API from the Web Workers spec. Web Worker
   ;
 /*!
 {
-  "name": "CSS Calc",
-  "property": "csscalc",
-  "caniuse": "calc",
-  "tags": ["css"],
-  "builderAliases": ["css_calc"],
-  "authors": ["@calvein"]
-}
-!*/
-/* DOC
-Method of allowing calculated values for length units. For example:
-
-```css
-//lem {
-  width: calc(100% - 3em);
-}
-```
-*/
-
-  Modernizr.addTest('csscalc', function() {
-    var prop = 'width:';
-    var value = 'calc(10px);';
-    var el = createElement('a');
-
-    el.style.cssText = prop + prefixes.join(value + prop);
-
-    return !!el.style.length;
-  });
-
-/*!
-{
   "name": "CSS Gradients",
   "caniuse": "css-gradients",
   "property": "cssgradients",
@@ -796,6 +1022,39 @@ Method of allowing calculated values for length units. For example:
 
 /*!
 {
+  "name": "CSS Pointer Events",
+  "caniuse": "pointer-events",
+  "property": "csspointerevents",
+  "authors": ["ausi"],
+  "tags": ["css"],
+  "builderAliases": ["css_pointerevents"],
+  "notes": [
+    {
+      "name": "MDN Docs",
+      "href": "https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events"
+    },{
+      "name": "Test Project Page",
+      "href": "https://ausi.github.com/Feature-detection-technique-for-pointer-events/"
+    },{
+      "name": "Test Project Wiki",
+      "href": "https://github.com/ausi/Feature-detection-technique-for-pointer-events/wiki"
+    },
+    {
+      "name": "Related Github Issue",
+      "href": "https://github.com/Modernizr/Modernizr/issues/80"
+    }
+  ]
+}
+!*/
+
+  Modernizr.addTest('csspointerevents', function() {
+    var style = createElement('a').style;
+    style.cssText = 'pointer-events:auto';
+    return style.pointerEvents === 'auto';
+  });
+
+/*!
+{
   "name": "CSS position: sticky",
   "property": "csspositionsticky",
   "tags": ["css"],
@@ -819,6 +1078,50 @@ Method of allowing calculated values for length units. For example:
     mStyle.cssText = prop + prefixes.join(value + ';' + prop).slice(0, -prop.length);
 
     return mStyle.position.indexOf(value) !== -1;
+  });
+
+/*!
+{
+  "name": "CSS Transform Style preserve-3d",
+  "property": "preserve3d",
+  "authors": ["denyskoch", "aFarkas"],
+  "tags": ["css"],
+  "notes": [{
+    "name": "MDN Docs",
+    "href": "https://developer.mozilla.org/en-US/docs/Web/CSS/transform-style"
+  },{
+    "name": "Related Github Issue",
+    "href": "https://github.com/Modernizr/Modernizr/issues/1748"
+  }]
+}
+!*/
+/* DOC
+Detects support for `transform-style: preserve-3d`, for getting a proper 3D perspective on elements.
+*/
+
+  Modernizr.addTest('preserve3d', function() {
+    var outerAnchor, innerAnchor;
+    var CSS = window.CSS;
+    var result = false;
+
+    if (CSS && CSS.supports && CSS.supports('(transform-style: preserve-3d)')) {
+      return true;
+    }
+
+    outerAnchor = createElement('a');
+    innerAnchor = createElement('a');
+
+    outerAnchor.style.cssText = 'display: block; transform-style: preserve-3d; transform-origin: right; transform: rotateY(40deg);';
+    innerAnchor.style.cssText = 'display: block; width: 9px; height: 1px; background: #000; transform-origin: right; transform: rotateY(40deg);';
+
+    outerAnchor.appendChild(innerAnchor);
+    docElement.appendChild(outerAnchor);
+
+    result = innerAnchor.getBoundingClientRect();
+    docElement.removeChild(outerAnchor);
+
+    result = result.width && result.width < 4;
+    return result;
   });
 
 
@@ -1064,80 +1367,6 @@ Modernizr.inputtypes.week
   }
 
   ;
-
-  /**
-   * Modernizr.mq tests a given media query, live against the current state of the window
-   * adapted from matchMedia polyfill by Scott Jehl and Paul Irish
-   * gist.github.com/786768
-   *
-   * @memberof Modernizr
-   * @name Modernizr.mq
-   * @optionName Modernizr.mq()
-   * @optionProp mq
-   * @access public
-   * @function mq
-   * @param {string} mq - String of the media query we want to test
-   * @returns {boolean}
-   * @example
-   * Modernizr.mq allows for you to programmatically check if the current browser
-   * window state matches a media query.
-   *
-   * ```js
-   *  var query = Modernizr.mq('(min-width: 900px)');
-   *
-   *  if (query) {
-   *    // the browser window is larger than 900px
-   *  }
-   * ```
-   *
-   * Only valid media queries are supported, therefore you must always include values
-   * with your media query
-   *
-   * ```js
-   * // good
-   *  Modernizr.mq('(min-width: 900px)');
-   *
-   * // bad
-   *  Modernizr.mq('min-width');
-   * ```
-   *
-   * If you would just like to test that media queries are supported in general, use
-   *
-   * ```js
-   *  Modernizr.mq('only all'); // true if MQ are supported, false if not
-   * ```
-   *
-   *
-   * Note that if the browser does not support media queries (e.g. old IE) mq will
-   * always return false.
-   */
-
-  var mq = (function() {
-    var matchMedia = window.matchMedia || window.msMatchMedia;
-    if (matchMedia) {
-      return function(mq) {
-        var mql = matchMedia(mq);
-        return mql && mql.matches || false;
-      };
-    }
-
-    return function(mq) {
-      var bool = false;
-
-      injectElementWithStyles('@media ' + mq + ' { #modernizr { position: absolute; } }', function(node) {
-        bool = (window.getComputedStyle ?
-                window.getComputedStyle(node, null) :
-                node.currentStyle).position == 'absolute';
-      });
-
-      return bool;
-    };
-  })();
-
-
-  ModernizrProto.mq = mq;
-
-
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -1755,6 +1984,26 @@ Detects whether or not elements can be animated using CSS
 
 /*!
 {
+  "name": "CSS Grid (old & new)",
+  "property": ["cssgrid", "cssgridlegacy"],
+  "authors": ["Faruk Ates"],
+  "tags": ["css"],
+  "notes": [{
+    "name": "The new, standardized CSS Grid",
+    "href": "https://www.w3.org/TR/css3-grid-layout/"
+  }, {
+    "name": "The _old_ CSS Grid (legacy)",
+    "href": "https://www.w3.org/TR/2011/WD-css3-grid-layout-20110407/"
+  }]
+}
+!*/
+
+  // `grid-columns` is only in the old syntax, `grid-column` exists in both and so `grid-template-rows` is used for the new syntax.
+  Modernizr.addTest('cssgridlegacy', testAllProps('grid-columns', '10px', true));
+  Modernizr.addTest('cssgrid', testAllProps('grid-template-rows', 'none', true));
+
+/*!
+{
   "name": "Flexbox",
   "property": "flexbox",
   "caniuse": "flexbox",
@@ -1834,36 +2083,7 @@ Detects support for the Flexible Box Layout model, a.k.a. Flexbox, which allows 
 !*/
 
   Modernizr.addTest('csstransforms3d', function() {
-    var ret = !!testAllProps('perspective', '1px', true);
-    var usePrefix = Modernizr._config.usePrefixes;
-
-    // Webkit's 3D transforms are passed off to the browser's own graphics renderer.
-    //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
-    //   some conditions. As a result, Webkit typically recognizes the syntax but
-    //   will sometimes throw a false positive, thus we must do a more thorough check:
-    if (ret && (!usePrefix || 'webkitPerspective' in docElement.style)) {
-      var mq;
-      var defaultStyle = '#modernizr{width:0;height:0}';
-      // Use CSS Conditional Rules if available
-      if (Modernizr.supports) {
-        mq = '@supports (perspective: 1px)';
-      } else {
-        // Otherwise, Webkit allows this media query to succeed only if the feature is enabled.
-        // `@media (transform-3d),(-webkit-transform-3d){ ... }`
-        mq = '@media (transform-3d)';
-        if (usePrefix) {
-          mq += ',(-webkit-transform-3d)';
-        }
-      }
-
-      mq += '{#modernizr{width:7px;height:18px;margin:0;padding:0;border:0}}';
-
-      testStyles(defaultStyle + mq, function(elem) {
-        ret = elem.offsetWidth === 7 && elem.offsetHeight === 18;
-      });
-    }
-
-    return ret;
+    return !!testAllProps('perspective', '1px', true);
   });
 
 /*!
@@ -1876,6 +2096,80 @@ Detects support for the Flexible Box Layout model, a.k.a. Flexbox, which allows 
 !*/
 
   Modernizr.addTest('csstransitions', testAllProps('transition', 'all', true));
+
+
+  /**
+   * Modernizr.mq tests a given media query, live against the current state of the window
+   * adapted from matchMedia polyfill by Scott Jehl and Paul Irish
+   * gist.github.com/786768
+   *
+   * @memberof Modernizr
+   * @name Modernizr.mq
+   * @optionName Modernizr.mq()
+   * @optionProp mq
+   * @access public
+   * @function mq
+   * @param {string} mq - String of the media query we want to test
+   * @returns {boolean}
+   * @example
+   * Modernizr.mq allows for you to programmatically check if the current browser
+   * window state matches a media query.
+   *
+   * ```js
+   *  var query = Modernizr.mq('(min-width: 900px)');
+   *
+   *  if (query) {
+   *    // the browser window is larger than 900px
+   *  }
+   * ```
+   *
+   * Only valid media queries are supported, therefore you must always include values
+   * with your media query
+   *
+   * ```js
+   * // good
+   *  Modernizr.mq('(min-width: 900px)');
+   *
+   * // bad
+   *  Modernizr.mq('min-width');
+   * ```
+   *
+   * If you would just like to test that media queries are supported in general, use
+   *
+   * ```js
+   *  Modernizr.mq('only all'); // true if MQ are supported, false if not
+   * ```
+   *
+   *
+   * Note that if the browser does not support media queries (e.g. old IE) mq will
+   * always return false.
+   */
+
+  var mq = (function() {
+    var matchMedia = window.matchMedia || window.msMatchMedia;
+    if (matchMedia) {
+      return function(mq) {
+        var mql = matchMedia(mq);
+        return mql && mql.matches || false;
+      };
+    }
+
+    return function(mq) {
+      var bool = false;
+
+      injectElementWithStyles('@media ' + mq + ' { #modernizr { position: absolute; } }', function(node) {
+        bool = (window.getComputedStyle ?
+                window.getComputedStyle(node, null) :
+                node.currentStyle).position == 'absolute';
+      });
+
+      return bool;
+    };
+  })();
+
+
+  ModernizrProto.mq = mq;
+
 
 
   // Run each test
