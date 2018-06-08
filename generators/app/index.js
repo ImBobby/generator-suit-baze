@@ -23,7 +23,7 @@ const paths = {
 
 const msgs = {
     boilerplate: 'Boilerplate may have been installed.',
-    bower: 'bower.json is not exist. Install boilerplate first.',
+    installFirst: 'Install boilerplate first.',
     downloading: 'Downloading asset(s) from cdn...',
     created: 'asset will be created in'
 }
@@ -74,13 +74,13 @@ module.exports = generators.Base.extend({
             process.exit(1)
         }
 
-        const BOWER_FILE = this.destinationPath('./bower.json')
+        const PACKAGE_FILE = this.destinationPath('./package.json')
         let answer = this.answers
         let choice = plugins.filter( plugin => plugin.name === answer.split(' - ')[0] )[0]
 
         if ( answer === 'boilerplate' ) {
             try {
-                fs.openSync(BOWER_FILE, 'r')
+                fs.openSync(PACKAGE_FILE, 'r')
                 log(msgs.boilerplate)
                 process.exit(1)
             } catch (e) {
@@ -88,9 +88,9 @@ module.exports = generators.Base.extend({
             }
         } else {
             try {
-                fs.openSync(BOWER_FILE, 'r')
+                fs.openSync(PACKAGE_FILE, 'r')
             } catch(e) {
-                log(msgs.bower)
+                log(msgs.installFirst)
                 process.exit(1)
             }
 
@@ -130,8 +130,6 @@ module.exports = generators.Base.extend({
 
                 log(`${chalk.green(msgs.created)} ${paths[filetype]}`)
             })
-
-            updateBower(choice.registryName, choice.version)
         }
 
         function boilerplate() {
@@ -155,19 +153,6 @@ module.exports = generators.Base.extend({
             this.fs.write(`./_partials/header.php`, '')
             this.fs.write(`./_partials/footer.php`, '')
             this.fs.write(`./_partials/scripts.php`, '')
-        }
-
-        function updateBower(name, version) {
-            fs.readFile(BOWER_FILE, (err, data) => {
-                if ( err ) throw err;
-
-                let content = JSON.parse(data)
-                content.dependencies[name] = version
-
-                fs.writeFile(BOWER_FILE, jsonPretty(content), err => {
-                    if ( err ) throw err;
-                })
-            })
         }
     }
 })
